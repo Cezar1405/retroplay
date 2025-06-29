@@ -1,0 +1,3 @@
+Blasphemous.app=com.thegamekitchen.blasphemousmobile
+DragonBound.app=org.chromium.webapk.ae59c98779baad9c3_v2
+Prince Of Persia The Lost Crown.app=com.ubisoft.princeofpersia.thelostcrown.mobile.action.adventure.platform

@@ -1,0 +1,112 @@
+[
+  {
+    "nombre": "Drastic",
+    "pkg": "com.dsemu.drastic",
+    "atv": "com.dsemu.drastic.DraSticActivity",
+    "action": "MAIN",
+    "filepathkey": "GAMEPATH",
+    "filetype": "",
+    "url": "https://archive.org/download/dra-stic_202505/DraStic.apk"
+  },
+  {
+    "nombre": "Dolphin MMJR2",
+    "pkg": "org.dolphinemu.mmjr",
+    "atv": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+    "action": "VIEW",
+    "filepathkey": "AutoStartFile",
+    "filetype": "",
+    "url": "https://github.com/Medard22/Dolphin-MMJR2-VBI/releases/download/U24.03.22-21259/Dolphin.MMJR2-VBI-U24.03.22-21259.apk"
+  },
+  {
+    "nombre": "Dolphin Enhanced",
+    "pkg": "org.mm.j",
+    "atv": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+    "action": "VIEW",
+    "filepathkey": "AutoStartFile",
+    "filetype": "",
+    "url": "https://github.com/Gamer64ytb/Dolphin-Enhanced/releases/download/v1.1.1/app-release.apk"
+  },
+  {
+    "nombre": "Dolphin Oficial",
+    "pkg": "org.dolphinemu.dolphinemu",
+    "atv": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+    "action": "MAIN",
+    "filepathkey": "AutoStartFile",
+    "filetype": "",
+    "url": "https://play.google.com/store/apps/details?id=org.dolphinemu.dolphinemu"
+  },
+  {
+    "nombre": "Nethersx2",
+    "pkg": "xyz.aethersx2.android",
+    "atv": "xyz.aethersx2.android.EmulationActivity",
+    "action": "MAIN",
+    "filepathkey": "bootPath",
+    "filetype": "",
+    "url": "https://github.com/Trixarian/NetherSX2-classic/releases/download/2.0e/15210-v2.0-3668-ex.apk"
+  },
+  {
+    "nombre": "PPSSPP",
+    "pkg":"org.ppsspp.ppsspp",
+    "atv":"org.ppsspp.ppsspp.PpssppActivity",
+    "action":"VIEW",
+    "url":"https://archive.org/download/dra-stic_202505/PPSSPP.apk",
+    "useUri": true
+  },
+  {
+    "nombre": "PPSSPP Gold",
+    "pkg":"org.ppsspp.ppssppgold",
+    "atv":"org.ppsspp.ppsspp.PpssppActivity",
+    "action":"VIEW",
+    "url":"https://www.mediafire.com/file/yen08e060xm9fww/PPSSPP-GOLD_1.18.1-InMG.zip/file",
+    "useUri": true
+  },
+  {
+    "nombre":"JL-MOD",
+    "pkg":"ru.woesss.j2meloader",
+    "atv":"ru.playsoftware.j2meloader.MainActivity",
+    "action":"VIEW",
+    "url":"https://github.com/woesss/JL-Mod/releases/download/continuous/JL-Mod_0.87.1-250213-cfb9c20-arm64-v8a.apk",
+    "useUri":true
+  },
+  {
+    "nombre":"Cemu debug",
+    "pkg":"info.cemu.Cemu",
+    "atv":"info.cemu.Cemu.emulation.EmulationActivity",
+    "action":"VIEW",
+    "url":"https://archive.org/download/dra-stic_202505/Cemu%20debug.apk",
+    "useUri":true
+  },
+  {
+    "nombre":"Uzuy Antutu",
+    "pkg":"com.antutu.ABenchMarc",
+    "atv":"org.uzuy.uzuy_emu.activities.EmulationActivity",
+    "action":"VIEW",
+    "url":"https://archive.org/download/dra-stic_202505/Uzuy%20AnTuTu.apk",
+    "useUri":true
+  },
+  {
+    "nombre":"Eden",
+    "pkg":"dev.eden.eden_emulator",
+    "atv":"org.yuzu.yuzu_emu.activities.EmulationActivity",
+    "action":"VIEW",
+    "url":"https://mega.nz/file/sV8DhIyR#_t3I2bujXhVusenPeACG4gLUFMGVJ-jmKgeD5Mn2R1g",
+    "useUri":true
+  },
+  {
+    "nombre":"MelonDS",
+    "pkg":"me.magnum.melonds",
+    "atv":"me.magnum.melonds.ui.emulator.EmulatorActivity",
+    "action":"me.magnum.melonds.LAUNCH_ROM",
+    "filepathkey": "PATH",
+    "filetype": "",
+    "url":"https://github.com/rafaelvcaetano/melonDS-android/releases/download/beta-1.10.0/app-gitHub-prod-release.apk"
+  },
+  {
+    "nombre":"Flycast",
+    "pkg":"com.flycast.emulator",
+    "atv":"com.flycast.emulator.MainActivity",
+    "action":"MAIN",
+    "url":"https://www.mediafire.com/file/abuvhts2wnmcae8/Flycast+APK+v2.4+rev279-MOD.g5f4eefab5.zip/file",
+    "useUri":true
+  }
+]

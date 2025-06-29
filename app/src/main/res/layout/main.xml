@@ -1,11 +1,302 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+	android:keepScreenOn="true"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+	<ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+		android:src="@drawable/default_back" />
 
-</LinearLayout>
+	<!--videorom-->
+	<VideoView
+		android:id="@+id/videoPreview"
+		android:layout_width="280dp"
+		android:layout_height="210dp"
+		android:layout_gravity="left"
+		android:layout_marginTop="110dp"
+		android:layout_marginLeft="90dp"
+		android:visibility="gone"
+		android:layout_centerInParent="true"/>
+
+	<!--screenshot-->
+	<ImageView
+		android:id="@+id/dynamicScreenshot"
+		android:layout_width="280dp"
+		android:layout_height="210dp"
+		android:scaleType="fitCenter"
+		android:layout_gravity="left"
+		android:layout_marginTop="110dp"
+		android:layout_marginLeft="90dp"
+		android:visibility="gone"/>
+
+	<FrameLayout
+		android:id="@+id/uiApp"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:overScrollMode="never"
+		android:scrollbars="none"
+		android:visibility="visible">
+
+		<!-- Imagen de fondo -->
+		<ImageView
+			android:id="@+id/dynamicBackground"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scaleType="fitXY"
+			android:src="@drawable/background_image" />
+
+		<!--degradado negro-->
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="300dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/degraded_image"
+			android:layout_gravity="bottom" />
+
+		<!-- Slider horizontal -->
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/systemSlider"
+			android:layout_width="match_parent"
+			android:layout_height="180dp"
+			android:layout_marginTop="20dp"
+			android:layout_gravity="center"
+			android:clipToPadding="false"
+			android:paddingLeft="20dp"
+			android:paddingRight="20dp"
+			android:overScrollMode="never"
+			android:scrollbars="none" />
+
+		<!--Titulo Sistema -->
+		<TextView
+			android:id="@+id/tSystem"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="50dp"
+			android:padding="15dp"
+			android:layout_gravity="center|left"
+			android:visibility="gone"
+			android:textColor="#ffffff"
+			android:textSize="17sp"
+			android:orientation="vertical"/>
+
+		<!--descripcion Sistema -->
+		<TextView
+			android:id="@+id/descSystem"
+			android:layout_width="600dp"
+			android:layout_height="110dp"
+			android:layout_marginTop="105dp"
+			android:padding="15dp"
+			android:layout_gravity="center|left"
+			android:visibility="gone"
+			android:textColor="#9f9f9f"
+			android:textSize="10sp"
+			android:orientation="vertical"/>
+
+		<!--core Sistema -->
+		<TextView
+			android:id="@+id/coreSystem"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
+			android:padding="15dp"
+			android:layout_gravity="bottom|right"
+			android:visibility="gone"
+			android:textColor="#FFFFFF"
+			android:textSize="10sp"
+			android:orientation="vertical"/>
+
+		<!--icon-->
+		<ImageView
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:src="@drawable/icon"
+			android:layout_gravity="bottom|right"
+			android:layout_marginBottom="45dp"
+			android:layout_marginRight="10dp" />
+		
+		<!--boton ajustes-->
+		<ImageView
+			android:id="@+id/ajustes"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:src="@drawable/main"
+			android:contentDescription="Botón de PayPal"
+			android:layout_gravity="top|left"
+			android:layout_margin="10dp"
+			android:clickable="true"
+			android:focusable="true" />
+	</FrameLayout>
+
+	<!-- Contenedor de resultados (inicialmente oculto) -->
+	<FrameLayout
+		android:id="@+id/container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:overScrollMode="never"
+		android:scrollbars="none"
+		android:visibility="gone">
+
+		<ListView
+			android:id="@+id/listViewRoms"
+			android:layout_width="280dp"
+			android:layout_height="match_parent"
+			android:layout_gravity="end"
+			android:divider="@android:color/transparent"
+			android:dividerHeight="10dp"
+			android:scrollbars="none"
+			android:visibility="visible"
+			android:paddingBottom="50dp"
+			android:paddingTop="30dp"
+			android:clipToPadding="false"/>
+
+		<!--fondo para el titulo-->
+		<TextView
+			android:id="@+id/backgroundTitle"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:background="#CC1d1d1d"
+			android:layout_gravity="bottom"
+			android:orientation="vertical"/>
+
+		<!--titulo-->
+		<TextView
+			android:id="@+id/romTitle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|left"
+			android:layout_marginBottom="20dp"
+			android:textAlignment="center"
+			android:paddingLeft="15dp"
+			android:textColor="#FFFFFF"
+			android:textSize="13sp"/>
+
+		<!--cover-->
+		<ImageView
+			android:id="@+id/dynamicCover"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:scaleType="fitCenter"
+			android:layout_gravity="bottom|center_horizontal"
+			android:layout_marginBottom="15dp"
+			android:layout_marginLeft="5dp"/>
+
+		<!--3dbox-->
+		<ImageView
+			android:id="@+id/dynamic3dbox"
+			android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:scaleType="fitCenter"
+			android:layout_gravity="bottom|center_horizontal"
+			android:layout_marginBottom="5dp"
+			android:layout_marginLeft="100dp"/>
+
+		<!--Size-->
+		<TextView
+			android:id="@+id/romSize"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|left"
+			android:layout_marginBottom="10dp"
+			android:textAlignment="center"
+			android:paddingLeft="15dp"
+			android:textSize="10sp"/>
+
+		<!--Juegos Cargados-->
+		<TextView
+			android:id="@+id/systemTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|right"
+			android:layout_marginBottom="10dp"
+			android:textAlignment="center"
+			android:paddingRight="15dp"
+			android:textColor="#FFFFFF"
+			android:textSize="10sp"/>
+
+		<!--borrar-->
+		<TextView
+			android:id="@+id/borrarRom"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|left"
+			android:layout_marginBottom="65dp"
+			android:textAlignment="center"
+			android:paddingTop="8dp"
+			android:paddingBottom="8dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="ELIMINAR"
+			android:background="#b11212"
+			android:visibility="gone"
+			android:textSize="10sp"/>
+
+		<!--EspacioDisponible-->
+		<TextView
+			android:id="@+id/espacioDisp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|left"
+			android:layout_marginBottom="100dp"
+			android:textAlignment="center"
+			android:paddingTop="6dp"
+			android:paddingBottom="6dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="disponible/total"
+			android:background="#232323"
+			android:textColor="#FFFFFF"
+			android:visibility="visible"
+			android:textSize="7sp"/>
+
+		<!--Boton descargados-->
+		<TextView
+			android:id="@+id/toggleList"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Mis juegos"
+			android:layout_gravity="top|left"
+			android:layout_marginTop="80dp"
+			android:textAlignment="center"
+			android:paddingTop="9dp"
+			android:paddingBottom="9dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColor="#FFFFFF"
+			android:background="#232323"
+			android:visibility="visible"
+			android:textSize="10sp"/>
+
+		<!--buscador-->
+		<EditText
+			android:id="@+id/searchBox"
+			android:layout_width="100dp"
+			android:layout_height="wrap_content"
+			android:hint="Buscar ROM..."
+			android:padding="8dp"
+			android:layout_gravity="top|left"
+			android:layout_marginTop="20dp"
+			android:textAlignment="center"
+			android:paddingTop="9dp"
+			android:paddingBottom="9dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:textColorHint="#B3FFFFFF"
+			android:textColor="#FFFFFF"
+			android:background="#232323"
+			android:visibility="visible"
+			android:textSize="12sp"
+			android:inputType="text"/>
+
+		<!--webview oculto-->
+		<WebView
+			android:id="@+id/mediafireWebView"
+			android:layout_width="1dp"
+			android:layout_height="1dp"
+			android:visibility="gone" />
+	</FrameLayout>
+</FrameLayout>
+

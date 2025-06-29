@@ -1,0 +1,97 @@
+AirStrike1944(teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/AirStrike1944%28teclado%29.jar=Size 0.29 MB
+Assassin's cred 1 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Assassin%27s%20cred%201%20640x360%20%28touch%29.jar=Size 0.93 MB
+Assassin's cred 2 800x480 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Assassin%27s%20cred%202%20800x480%20%28touch%29.jar=Size 1.32 MB
+Assassin's cred 3 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Assassin%27s%20cred%203%20640x360%20%28touch%29.jar=Size 1.62 MB
+Assassin's cred la hermandad 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Assassin%27s%20cred%20la%20hermandad%20640x360%20%28touch%29.jar=Size 1.76 MB
+Assassin's cred revelation 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Assassin%27s%20cred%20revelation%20640x360%20%28touch%29.jar=Size 2.29 MB
+Avatar 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Avatar%20240x320%20%28teclado%29.jar=Size 0.98 MB
+Beowulf 352x416 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Beowulf%20352x416%20%28teclado%29.jar=Size 0.49 MB
+Blood+ 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Blood%2B%20240x320%20%28teclado%29.jar=Size 0.64 MB
+Brothers In Arms Earned In Blood 240x320 (teclado) Español.jar=https://archive.org/download/j2me_20250501/j2me.zip/Brothers%20In%20Arms%20Earned%20In%20Blood%20240x320%20%28teclado%29%20Espa%C3%B1ol.jar=Size 0.27 MB
+Brothers in Arms Art of War 240x320 (teclado) Español.jar=https://archive.org/download/j2me_20250501/j2me.zip/Brothers%20in%20Arms%20Art%20of%20War%20240x320%20%28teclado%29%20Espa%C3%B1ol.jar=Size 0.59 MB
+COD5 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/COD5%20240x320%20%28teclado%29.jar=Size 0.40 MB
+Call Of Duty 3 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Call%20Of%20Duty%203%20240x320%20%28teclado%29.jar=Size 0.44 MB
+Cowboys And Aliens 480x800.jar=https://archive.org/download/j2me_20250501/j2me.zip/Cowboys%20And%20Aliens%20480x800.jar=Size 3.36 MB
+Crash Nitro Kart 1 (240x320) .jar=https://archive.org/download/j2me_20250501/j2me.zip/Crash%20Nitro%20Kart%201%20%28240x320%29%20.jar=Size 0.11 MB
+Crash bandicoot Mutant Island (MULTIRESOLUCION).jar=https://archive.org/download/j2me_20250501/j2me.zip/Crash%20bandicoot%20Mutant%20Island%20%28MULTIRESOLUCION%29.jar=Size 0.88 MB
+Crash bandicoot Nitro Kart 2(Multiresolucion).jar=https://archive.org/download/j2me_20250501/j2me.zip/Crash%20bandicoot%20Nitro%20Kart%202%28Multiresolucion%29.jar=Size 0.39 MB
+Crash of theTitans(Multiresolucion).jar=https://archive.org/download/j2me_20250501/j2me.zip/Crash%20of%20theTitans%28Multiresolucion%29.jar=Size 0.28 MB
+CrazyTaxi 3d 640x360 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/CrazyTaxi%203d%20640x360%20%28teclado%29.jar=Size 0.88 MB
+Dungeon_Hunter_3_640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/Dungeon_Hunter_3_640x360.jar=Size 2.28 MB
+EarthwormJim(touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/EarthwormJim%28touch%29.jar=Size 1.09 MB
+G0D OF W4R BETRAYAl - Español (240x320).jar=https://archive.org/download/j2me_20250501/j2me.zip/G0D%20OF%20W4R%20BETRAYAl%20-%20Espa%C3%B1ol%20%28240x320%29.jar=Size 0.73 MB
+Gangstar 1 Crime City 240x320.jar=https://archive.org/download/j2me_20250501/j2me.zip/Gangstar%201%20Crime%20City%20240x320.jar=Size 0.39 MB
+Gangstar 2 Kings of LA 240x320.jar=https://archive.org/download/j2me_20250501/j2me.zip/Gangstar%202%20Kings%20of%20LA%20240x320.jar=Size 0.97 MB
+Gangstar 3 Miami Vindication 640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/Gangstar%203%20Miami%20Vindication%20640x360.jar=Size 1.12 MB
+Gangstar 4 Rio City of Saints 640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/Gangstar%204%20Rio%20City%20of%20Saints%20640x360.jar=Size 2.09 MB
+Ghost Rider 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Ghost%20Rider%20240x320%20%28teclado%29.jar=Size 0.50 MB
+HeroOfSparta 320x240 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/HeroOfSparta%20320x240%20%28teclado%29.jar=Size 0.58 MB
+HolyWars 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/HolyWars%20240x320%20%28teclado%29.jar=Size 0.20 MB
+JohnCarter 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/JohnCarter%20640x360%20%28touch%29.jar=Size 1.42 MB
+Medalla de Honor Airborne 3D 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Medalla%20de%20Honor%20Airborne%203D%20240x320%20%28teclado%29.jar=Size 0.57 MB
+ModernCombat2 320x240 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/ModernCombat2%20320x240%20%28teclado%29.jar=Size 0.84 MB
+ModernCombat4 480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/ModernCombat4%20480x800%20%28touch%29.jar=Size 2.85 MB
+Monsters University 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Monsters%20University%20240x320%20%28teclado%29.jar=Size 1.32 MB
+NOVA3_640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/NOVA3_640x360.jar=Size 2.05 MB
+NOVA_640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/NOVA_640x360.jar=Size 2.97 MB
+NOVA_LEGACY-640x360.jar=https://archive.org/download/j2me_20250501/j2me.zip/NOVA_LEGACY-640x360.jar=Size 1.85 MB
+NeedforSpeedTheRun 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/NeedforSpeedTheRun%20240x320%20%28teclado%29.jar=Size 1.02 MB
+NightmareCreatures 176x208 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/NightmareCreatures%20176x208%20%28teclado%29.jar=Size 0.16 MB
+Predators 480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Predators%20480x800%20%28touch%29.jar=Size 1.22 MB
+Prince Of Persia Arenas Olvidadas - Touch (640x360).jar=https://archive.org/download/j2me_20250501/j2me.zip/Prince%20Of%20Persia%20Arenas%20Olvidadas%20-%20Touch%20%28640x360%29.jar=Size 1.36 MB
+Prince of Persia - El Alma Del Guerrero Teclado (240x320).jar=https://archive.org/download/j2me_20250501/j2me.zip/Prince%20of%20Persia%20-%20El%20Alma%20Del%20Guerrero%20Teclado%20%28240x320%29.jar=Size 0.22 MB
+Prince of Persia Los Dos Tronos - Teclado (240x320).jar=https://archive.org/download/j2me_20250501/j2me.zip/Prince%20of%20Persia%20Los%20Dos%20Tronos%20-%20Teclado%20%28240x320%29.jar=Size 0.31 MB
+Prince of Persia Touch (640x360).jar=https://archive.org/download/j2me_20250501/j2me.zip/Prince%20of%20Persia%20Touch%20%28640x360%29.jar=Size 1.07 MB
+ResidentEvil-Degeneration_s40v3a.jar=https://archive.org/download/j2me_20250501/j2me.zip/ResidentEvil-Degeneration_s40v3a.jar=Size 0.36 MB
+Shadow Shoot .jar=https://archive.org/download/j2me_20250501/j2me.zip/Shadow%20Shoot%20.jar=Size 0.18 MB
+SonicAdvance 480x800 Touch.jar=https://archive.org/download/j2me_20250501/j2me.zip/SonicAdvance%20480x800%20Touch.jar=Size 1.60 MB
+SonicRacing_800x480.jar=https://archive.org/download/j2me_20250501/j2me.zip/SonicRacing_800x480.jar=Size 1.00 MB
+SoulCalibur 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/SoulCalibur%20640x360%20%28touch%29.jar=Size 1.30 MB
+Soul of Darkness 240x360 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Soul%20of%20Darkness%20240x360%20%28teclado%29.jar=Size 0.61 MB
+SplinterCellConviction-640x360-Touch.jar=https://archive.org/download/j2me_20250501/j2me.zip/SplinterCellConviction-640x360-Touch.jar=Size 1.04 MB
+SplinterCell Double Agent.jar=https://archive.org/download/j2me_20250501/j2me.zip/SplinterCell%20Double%20Agent.jar=Size 0.35 MB
+SplinterCellEO.jar=https://archive.org/download/j2me_20250501/j2me.zip/SplinterCellEO.jar=Size 0.14 MB
+Splinter cell chaos teory.jar=https://archive.org/download/j2me_20250501/j2me.zip/Splinter%20cell%20chaos%20teory.jar=Size 0.30 MB
+Splinter cell pandora.jar=https://archive.org/download/j2me_20250501/j2me.zip/Splinter%20cell%20pandora.jar=Size 0.22 MB
+Superman & Batman united 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Superman%20%26%20Batman%20united%20240x320%20%28teclado%29.jar=Size 0.45 MB
+Terminator salvation 3d 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/Terminator%20salvation%203d%20240x320%20%28teclado%29.jar=Size 0.98 MB
+Thor2_480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/Thor2_480x800%20%28touch%29.jar=Size 3.47 MB
+batman dark knight rises 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/batman%20dark%20knight%20rises%20640x360%20%28touch%29.jar=Size 1.62 MB
+ben 10 alien force (240x320).jar=https://archive.org/download/j2me_20250501/j2me.zip/ben%2010%20alien%20force%20%28240x320%29.jar=Size 0.57 MB
+ben 10 power of the omnitrix 320x240.jar=https://archive.org/download/j2me_20250501/j2me.zip/ben%2010%20power%20of%20the%20omnitrix%20320x240.jar=Size 0.34 MB
+bomberman 3d 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/bomberman%203d%20240x320%20%28teclado%29.jar=Size 0.29 MB
+chuck norris bring 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/chuck%20norris%20bring%20240x320%20%28teclado%29.jar=Size 0.61 MB
+devil may cry 3d.jar=https://archive.org/download/j2me_20250501/j2me.zip/devil%20may%20cry%203d.jar=Size 0.97 MB
+drakengard (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/drakengard%20%28teclado%29.jar=Size 0.17 MB
+familyguy2 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/familyguy2%20240x320%20%28teclado%29.jar=Size 0.79 MB
+heroes of the chaotic 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/heroes%20of%20the%20chaotic%20240x320%20%28teclado%29.jar=Size 0.92 MB
+how 240x360 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/how%20240x360%20%28teclado%29.jar=Size 0.36 MB
+iron man 2 480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/iron%20man%202%20480x800%20%28touch%29.jar=Size 1.05 MB
+iron man 3 480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/iron%20man%203%20480x800%20%28touch%29.jar=Size 3.77 MB
+kof2010all_dxrpo4p9.jar=https://archive.org/download/j2me_20250501/j2me.zip/kof2010all_dxrpo4p9.jar=Size 0.89 MB
+kofighters 3D 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/kofighters%203D%20240x320%20%28teclado%29.jar=Size 1.00 MB
+medieval combat age 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/medieval%20combat%20age%20240x320%20%28teclado%29.jar=Size 0.24 MB
+meninblack 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/meninblack%20240x320%20%28teclado%29.jar=Size 1.05 MB
+metalslug3_x5c17bl8.jar=https://archive.org/download/j2me_20250501/j2me.zip/metalslug3_x5c17bl8.jar=Size 0.19 MB
+mision imposinle 3.jar=https://archive.org/download/j2me_20250501/j2me.zip/mision%20imposinle%203.jar=Size 0.29 MB
+mortal Kombat 3d 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/mortal%20Kombat%203d%20240x320%20%28teclado%29.jar=Size 0.44 MB
+ongbak2mon 240x320 (táctil).jar=https://archive.org/download/j2me_20250501/j2me.zip/ongbak2mon%20240x320%20%28t%C3%A1ctil%29.jar=Size 0.96 MB
+residen Evil the misión 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/residen%20Evil%20the%20misi%C3%B3n%20240x320%20%28teclado%29.jar=Size 0.91 MB
+resident_evil_4_240x320_191362.jar=https://archive.org/download/j2me_20250501/j2me.zip/resident_evil_4_240x320_191362.jar=Size 0.77 MB
+saintseiya 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/saintseiya%20240x320%20%28teclado%29.jar=Size 1.01 MB
+sonic unleashed 480x800.jar=https://archive.org/download/j2me_20250501/j2me.zip/sonic%20unleashed%20480x800.jar=Size 1.17 MB
+spiderman toxic city 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/spiderman%20toxic%20city%20640x360%20%28touch%29.jar=Size 0.75 MB
+spiderman ultimate power 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/spiderman%20ultimate%20power%20640x360%20%28touch%29.jar=Size 2.17 MB
+splatterhous 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/splatterhous%20640x360%20%28touch%29.jar=Size 0.55 MB
+the Avengers 480x800 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/the%20Avengers%20480x800%20%28touch%29.jar=Size 2.30 MB
+the_simpsons_arcade.jar=https://archive.org/download/j2me_20250501/j2me.zip/the_simpsons_arcade.jar=Size 0.62 MB
+the amazin spiderman 2 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/the%20amazin%20spiderman%202%20640x360%20%28touch%29.jar=Size 2.82 MB
+the amazin spiderman 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/the%20amazin%20spiderman%20640x360%20%28touch%29.jar=Size 2.96 MB
+the overtaker 3d 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/the%20overtaker%203d%20240x320%20%28teclado%29.jar=Size 0.49 MB
+transformers 3 dark 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/transformers%203%20dark%20240x320%20%28teclado%29.jar=Size 0.46 MB
+transformers 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/transformers%20240x320%20%28teclado%29.jar=Size 0.56 MB
+ultimate spiderman 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/ultimate%20spiderman%20240x320%20%28teclado%29.jar=Size 0.27 MB
+warriors of fate 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/warriors%20of%20fate%20240x320%20%28teclado%29.jar=Size 0.49 MB
+zombie infection 1 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/zombie%20infection%201%20640x360%20%28touch%29.jar=Size 1.23 MB
+zombie infection 2 640x360 (touch).jar=https://archive.org/download/j2me_20250501/j2me.zip/zombie%20infection%202%20640x360%20%28touch%29.jar=Size 1.66 MB
+zombie infection 3 240x320 (teclado).jar=https://archive.org/download/j2me_20250501/j2me.zip/zombie%20infection%203%20240x320%20%28teclado%29.jar=Size 0.70 MB
