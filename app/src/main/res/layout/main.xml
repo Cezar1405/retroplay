@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	android:keepScreenOn="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+	android:background="#000000">
 
 	<ImageView
+		android:id="@+id/baseCabinet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-		android:src="@drawable/default_back" />
+        android:scaleType="fitXY" />
 
 	<!--videorom-->
 	<VideoView
@@ -46,8 +47,7 @@
 			android:id="@+id/dynamicBackground"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:scaleType="fitXY"
-			android:src="@drawable/background_image" />
+			android:scaleType="fitXY"/>
 
 		<!--degradado negro-->
 		<ImageView
@@ -173,6 +173,17 @@
 			android:paddingLeft="15dp"
 			android:textColor="#FFFFFF"
 			android:textSize="13sp"/>
+		
+		<!--marquees-->
+		<ImageView
+			android:id="@+id/dynamicMarquee"
+			android:layout_width="190dp"
+			android:layout_height="190dp"
+			android:scaleType="fitCenter"
+			android:layout_gravity="bottom|center_horizontal"
+			android:layout_marginBottom="170dp"
+			android:layout_marginLeft="5dp"
+			android:rotation="25"/>
 
 		<!--cover-->
 		<ImageView
