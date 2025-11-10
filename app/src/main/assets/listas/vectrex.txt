@@ -1,35 +1,35 @@
-3-D Crazy Coaster (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Crazy%20Coaster%20(1983).vec.zip
-3-D Mine Storm (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Mine%20Storm%20(1983).vec.zip
-3-D Narrow Escape (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Narrow%20Escape%20(1983).vec.zip
-Animaction (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Animaction%20(1983)%20(light%20pen).vec.zip
-Armor Attack (1982).vec.zip=https://gam.onl/user/vectrex/roms/Armor%20Attack%20(1982).vec.zip
-Art Master (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Art%20Master%20(1983)%20(light%20pen).vec.zip
-Bedlam (1983).vec.zip=https://gam.onl/user/vectrex/roms/Bedlam%20(1983).vec.zip
-Berzerk (1982).vec.zip=https://gam.onl/user/vectrex/roms/Berzerk%20(1982).vec.zip
-Blitz! - Action Football (1982).vec.zip=https://gam.onl/user/vectrex/roms/Blitz!%20-%20Action%20Football%20(1982).vec.zip
-Clean Sweep (1982).vec.zip=https://gam.onl/user/vectrex/roms/Clean%20Sweep%20(1982).vec.zip
-Clean Sweep (Mr Boston Version) (1982).vec.zip=https://gam.onl/user/vectrex/roms/Clean%20Sweep%20(Mr%20Boston%20Version)%20(1982).vec.zip
-Cosmic Chasm (1982).vec.zip=https://gam.onl/user/vectrex/roms/Cosmic%20Chasm%20(1982).vec.zip
-Dark Tower (1983) (Prototype).vec.zip=https://gam.onl/user/vectrex/roms/Dark%20Tower%20(1983)%20(Prototype).vec.zip
-Fortress of Narzod (1982).vec.zip=https://gam.onl/user/vectrex/roms/Fortress%20of%20Narzod%20(1982).vec.zip
-Heads Up - Action Soccer (1983).vec.zip=https://gam.onl/user/vectrex/roms/Heads%20Up%20-%20Action%20Soccer%20(1983).vec.zip
-Hyperchase (1982).vec.zip=https://gam.onl/user/vectrex/roms/Hyperchase%20(1982).vec.zip
-Melody Master (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Melody%20Master%20(1983)%20(light%20pen).vec.zip
-Mine Storm (1982).vec.zip=https://gam.onl/user/vectrex/roms/Mine%20Storm%20(1982).vec.zip
-Mine Storm II (1983).vec.zip=https://gam.onl/user/vectrex/roms/Mine%20Storm%20II%20(1983).vec.zip
-Polar Rescue (1983).vec.zip=https://gam.onl/user/vectrex/roms/Polar%20Rescue%20(1983).vec.zip
-Pole Position (1982).vec.zip=https://gam.onl/user/vectrex/roms/Pole%20Position%20(1982).vec.zip
-Rip-Off (1982).vec.zip=https://gam.onl/user/vectrex/roms/Rip-Off%20(1982).vec.zip
-Rocket Sledge Demo (1985) (PD).vec.zip=https://gam.onl/user/vectrex/roms/Rocket%20Sledge%20Demo%20(1985)%20(PD).vec.zip
-Scramble (1982).vec.zip=https://gam.onl/user/vectrex/roms/Scramble%20(1982).vec.zip
-Solar Quest (1982).vec.zip=https://gam.onl/user/vectrex/roms/Solar%20Quest%20(1982).vec.zip
-Space Wars (1982).vec.zip=https://gam.onl/user/vectrex/roms/Space%20Wars%20(1982).vec.zip
-Spike (1983).vec.zip=https://gam.onl/user/vectrex/roms/Spike%20(1983).vec.zip
-Spinball (1983).vec.zip=https://gam.onl/user/vectrex/roms/Spinball%20(1983).vec.zip
-Star Castle (1983).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Castle%20(1983).vec.zip
-Star Hawk (1982).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Hawk%20(1982).vec.zip
-Star Trek - The Motion Picture (1982).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Trek%20-%20The%20Motion%20Picture%20(1982).vec.zip
-Tour De France (1983) (Prototype).vec.zip=https://gam.onl/user/vectrex/roms/Tour%20De%20France%20(1983)%20(Prototype).vec.zip
-Vector Vaders by John Dondzila (1996).vec.zip=https://gam.onl/user/vectrex/roms/Vector%20Vaders%20by%20John%20Dondzila%20(1996).vec.zip
-Vectrex Pong (1998) (PD).vec.zip=https://gam.onl/user/vectrex/roms/Vectrex%20Pong%20(1998)%20(PD).vec.zip
-Web Warp (1983).vec.zip=https://gam.onl/user/vectrex/roms/Web%20Warp%20(1983).vec.zip
+3-D Crazy Coaster (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Crazy%20Coaster%20(1983).vec.zip=vectrex=
+3-D Mine Storm (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Mine%20Storm%20(1983).vec.zip=vectrex=
+3-D Narrow Escape (1983).vec.zip=https://gam.onl/user/vectrex/roms/3-D%20Narrow%20Escape%20(1983).vec.zip=vectrex=
+Animaction (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Animaction%20(1983)%20(light%20pen).vec.zip=vectrex=
+Armor Attack (1982).vec.zip=https://gam.onl/user/vectrex/roms/Armor%20Attack%20(1982).vec.zip=vectrex=
+Art Master (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Art%20Master%20(1983)%20(light%20pen).vec.zip=vectrex=
+Bedlam (1983).vec.zip=https://gam.onl/user/vectrex/roms/Bedlam%20(1983).vec.zip=vectrex=
+Berzerk (1982).vec.zip=https://gam.onl/user/vectrex/roms/Berzerk%20(1982).vec.zip=vectrex=
+Blitz! - Action Football (1982).vec.zip=https://gam.onl/user/vectrex/roms/Blitz!%20-%20Action%20Football%20(1982).vec.zip=vectrex=
+Clean Sweep (1982).vec.zip=https://gam.onl/user/vectrex/roms/Clean%20Sweep%20(1982).vec.zip=vectrex=
+Clean Sweep (Mr Boston Version) (1982).vec.zip=https://gam.onl/user/vectrex/roms/Clean%20Sweep%20(Mr%20Boston%20Version)%20(1982).vec.zip=vectrex=
+Cosmic Chasm (1982).vec.zip=https://gam.onl/user/vectrex/roms/Cosmic%20Chasm%20(1982).vec.zip=vectrex=
+Dark Tower (1983) (Prototype).vec.zip=https://gam.onl/user/vectrex/roms/Dark%20Tower%20(1983)%20(Prototype).vec.zip=vectrex=
+Fortress of Narzod (1982).vec.zip=https://gam.onl/user/vectrex/roms/Fortress%20of%20Narzod%20(1982).vec.zip=vectrex=
+Heads Up - Action Soccer (1983).vec.zip=https://gam.onl/user/vectrex/roms/Heads%20Up%20-%20Action%20Soccer%20(1983).vec.zip=vectrex=
+Hyperchase (1982).vec.zip=https://gam.onl/user/vectrex/roms/Hyperchase%20(1982).vec.zip=vectrex=
+Melody Master (1983) (light pen).vec.zip=https://gam.onl/user/vectrex/roms/Melody%20Master%20(1983)%20(light%20pen).vec.zip=vectrex=
+Mine Storm (1982).vec.zip=https://gam.onl/user/vectrex/roms/Mine%20Storm%20(1982).vec.zip=vectrex=
+Mine Storm II (1983).vec.zip=https://gam.onl/user/vectrex/roms/Mine%20Storm%20II%20(1983).vec.zip=vectrex=
+Polar Rescue (1983).vec.zip=https://gam.onl/user/vectrex/roms/Polar%20Rescue%20(1983).vec.zip=vectrex=
+Pole Position (1982).vec.zip=https://gam.onl/user/vectrex/roms/Pole%20Position%20(1982).vec.zip=vectrex=
+Rip-Off (1982).vec.zip=https://gam.onl/user/vectrex/roms/Rip-Off%20(1982).vec.zip=vectrex=
+Rocket Sledge Demo (1985) (PD).vec.zip=https://gam.onl/user/vectrex/roms/Rocket%20Sledge%20Demo%20(1985)%20(PD).vec.zip=vectrex=
+Scramble (1982).vec.zip=https://gam.onl/user/vectrex/roms/Scramble%20(1982).vec.zip=vectrex=
+Solar Quest (1982).vec.zip=https://gam.onl/user/vectrex/roms/Solar%20Quest%20(1982).vec.zip=vectrex=
+Space Wars (1982).vec.zip=https://gam.onl/user/vectrex/roms/Space%20Wars%20(1982).vec.zip=vectrex=
+Spike (1983).vec.zip=https://gam.onl/user/vectrex/roms/Spike%20(1983).vec.zip=vectrex=
+Spinball (1983).vec.zip=https://gam.onl/user/vectrex/roms/Spinball%20(1983).vec.zip=vectrex=
+Star Castle (1983).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Castle%20(1983).vec.zip=vectrex=
+Star Hawk (1982).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Hawk%20(1982).vec.zip=vectrex=
+Star Trek - The Motion Picture (1982).vec.zip=https://gam.onl/user/vectrex/roms/Star%20Trek%20-%20The%20Motion%20Picture%20(1982).vec.zip=vectrex=
+Tour De France (1983) (Prototype).vec.zip=https://gam.onl/user/vectrex/roms/Tour%20De%20France%20(1983)%20(Prototype).vec.zip=vectrex=
+Vector Vaders by John Dondzila (1996).vec.zip=https://gam.onl/user/vectrex/roms/Vector%20Vaders%20by%20John%20Dondzila%20(1996).vec.zip=vectrex=
+Vectrex Pong (1998) (PD).vec.zip=https://gam.onl/user/vectrex/roms/Vectrex%20Pong%20(1998)%20(PD).vec.zip=vectrex=
+Web Warp (1983).vec.zip=https://gam.onl/user/vectrex/roms/Web%20Warp%20(1983).vec.zip=vectrex=

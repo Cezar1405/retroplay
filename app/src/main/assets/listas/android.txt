@@ -1,3 +1,28 @@
-Blasphemous.app=com.thegamekitchen.blasphemousmobile
-DragonBound.app=org.chromium.webapk.ae59c98779baad9c3_v2
-Prince Of Persia The Lost Crown.app=com.ubisoft.princeofpersia.thelostcrown.mobile.action.adventure.platform
+Blasphemous.app=https://www.terabox.app/s/12sbCODRzszDGeszrk4kcuw=android=860.16 MB
+DragonBound.app=https://dragonbound.net/=android=
+Prince Of Persia The-Lost Crown v1.0.0f unlocked arm64-v8a 2.06 GB.app=https://www.terabox.app/s/1vb8KHG77d7bZFSuJ5aSWgA=android=2.06 GB
+Nine Years of Shadows v0.2.1 unlocked.app=https://www.terabox.app/s/19wtaXQsyLWx2qWSvHn83UQ=android=1.1 GB
+Fifa 15 mobile.app=https://www.mediafire.com/file/46f64j69dl0r4cz/FIFA+15+Mobile+.rar/file=android=900 MB
+Shadowgun Comzone.app=https://web.shadowgun-comzone.com/assets/download-links/android/comzone-2025.001.apk=android=
+Modern-Combat-4-Remasterizado.app=https://www.terabox.app/s/1TPckX9HBl7WQcgKRVxuiVg=android=
+The Amazing Spider Man v1.23e-a14.app=https://www.terabox.app/s/12gS-oaV5ouAbv-KvqkSlJw=android=
+METAL SLUG ACA NEOGEO.app=https://www.terabox.app/s/1DWoz18b8B72sAigLGRSNOQ=android=
+ACA NEOGEO METAL SLUG 2 v1.1.1.app=https://www.terabox.app/s/1iGCZ9qGe3vhKHxqBVUkUpw=android=
+ACA NEOGEO METAL SLUG 3 v1.1.1.app=https://www.terabox.app/s/1PmklcFv_g10r2_rO_YyvHQ=android=
+ACA NEOGEO METAL SLUG 4 v1.1.1.app=https://www.terabox.app/s/14VtR23mZ6Lg0G2sGGE9ZMA=android=
+ACA NEOGEO METAL SLUG 5 v1.1.2.app=https://www.terabox.app/s/1WkhCD-9T8U7-tywSjk_x9Q=android=
+Aca Neogeo Metal Slug X v1.1.1.app=https://www.terabox.app/s/1Fyh0LQ-69m8w3Ayf3w-maA=android=
+Halo Combat Evolved modo Historia.app=http://www.mediafire.com/file/ffwltdky0vni8fs/Halo_Combat_Evolved_Para_Android_%25E2%2580%259C2021%25E2%2580%259D_tecandroid.apk/file=android=
+Halo Combat Evolved modo Online.app=https://www.mediafire.com/file/mkivd7lcrzgghmy/HALO_COMBAT_EVOLVED_PARA_ANDROID_%255BVEGETTO_SAN%255D_by_Villa.apk/file=android=
+EinsenHorn-Xenos-A-14.app=https://www.terabox.app/s/1CQx3rPj-kP1Q6gQFdcEJ3A=android=
+sonic-mania-plus-netflix-v5.3.3-mod.app=https://www.terabox.app/s/1Ib0JuCaBnXDDQZJ-CU5hRw=android=
+castle-of-Illusion-v1.4.5_installer.app=https://www.terabox.app/s/14cqMIPD8sCr3pkFnjH2lcg=android=
+MEGA_MAN_X_DiVE_Offline_v1.0.0_MOD_juegosapkmod.com.app=https://www.terabox.app/s/10CAzkK6r2NmzW7WamcTNQQ=android=
+very-little-nightmares-v1.2.4-full.app=https://www.terabox.app/s/1UscnNjK6d4Hcmuvig2Px1w=android=
+lim121full-androidoyunclub.app=https://www.terabox.app/s/1jYGXp759wd1IHl7s0DFqhw=android=
+haak-v1.4.2-juegosapkmod.app=https://www.terabox.app/s/1y5JDtHCAylGyNDsLjhku4w=android=
+Street-Fighter-IV-CE-v1.01.00-unlocked.app=https://www.terabox.app/s/1Vu9w6l0cbYXwSGI-N6hBnA=android=
+devil.war.fps.offline.shooting_1.4.3-APK.app=https://www.terabox.app/s/1Hcz4NdW6PLnVwpznKs-ySA=android=
+Crashlands-2-v100.1.395-full.app=https://www.terabox.app/s/1TXBe3XfawS7A2DYpV0tAQg=android=
+Ultimate-Ninja-STORM-v1.1.1.app=https://www.terabox.app/s/1eewWtk0UJhuuO-019cQUPQ=android=
+Ganstar Rio.app=https://www.mediafire.com/file/blhkfulmwd5ydhi/Ganstar_R%25C3%25ADo_apk%252Bdata.zip/file=android=

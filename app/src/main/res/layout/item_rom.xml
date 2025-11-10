@@ -3,7 +3,10 @@
     android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground">
+	android:background="@drawable/item_selector_rom"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
 
     <TextView
         android:id="@+id/romName"
@@ -13,5 +16,7 @@
         android:textSize="14sp"
         android:maxLines="1"
         android:ellipsize="end"
-		android:gravity="center"/>
+        android:gravity="center"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 </LinearLayout>

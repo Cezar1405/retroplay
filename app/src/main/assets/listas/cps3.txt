@@ -1,5 +1,5 @@
-jojo.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/jojo.zip=Size 43.9M
-jojoba.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/jojoba.zip=Size 51.7M
-redearth.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/redearth.zip=Size 36.6M
-sfiii2.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/sfiii2.zip=Size 41.7M
-sfiii3.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/sfiii3.zip=Size 67.3M
+jojo.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/jojo.zip=cps3=43.9M
+jojoba.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/jojoba.zip=cps3=51.7M
+redearth.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/redearth.zip=cps3=36.6M
+sfiii2.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/sfiii2.zip=cps3=41.7M
+sfiii3.zip=https://archive.org/download/lvalriv_gmail_Cps3/Roms/Capcom%20Play%20System%20III/sfiii3.zip=cps3=67.3M

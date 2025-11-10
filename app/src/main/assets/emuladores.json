@@ -36,15 +36,6 @@
     "url": "https://play.google.com/store/apps/details?id=org.dolphinemu.dolphinemu"
   },
   {
-    "nombre": "Nethersx2",
-    "pkg": "xyz.aethersx2.android",
-    "atv": "xyz.aethersx2.android.EmulationActivity",
-    "action": "MAIN",
-    "filepathkey": "bootPath",
-    "filetype": "",
-    "url": "https://github.com/Trixarian/NetherSX2-classic/releases/download/2.0e/15210-v2.0-3668-ex.apk"
-  },
-  {
     "nombre": "PPSSPP",
     "pkg":"org.ppsspp.ppsspp",
     "atv":"org.ppsspp.ppsspp.PpssppActivity",

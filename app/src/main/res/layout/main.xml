@@ -66,7 +66,7 @@
 			android:layout_gravity="center"
 			android:clipToPadding="false"
 			android:paddingLeft="20dp"
-			android:paddingRight="20dp"
+			android:paddingRight="650dp"
 			android:overScrollMode="never"
 			android:scrollbars="none" />
 
@@ -140,8 +140,8 @@
 		android:scrollbars="none"
 		android:visibility="gone">
 
-		<ListView
-			android:id="@+id/listViewRoms"
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/recyclerRoms"
 			android:layout_width="280dp"
 			android:layout_height="match_parent"
 			android:layout_gravity="end"
@@ -149,8 +149,8 @@
 			android:dividerHeight="10dp"
 			android:scrollbars="none"
 			android:visibility="visible"
-			android:paddingBottom="50dp"
-			android:paddingTop="30dp"
+			android:paddingBottom="350dp"
+			android:paddingTop="20dp"
 			android:clipToPadding="false"/>
 
 		<!--fondo para el titulo-->
@@ -242,6 +242,7 @@
 			android:paddingRight="10dp"
 			android:text="ELIMINAR"
 			android:background="#b11212"
+			android:textColor="#FFFFFF"
 			android:visibility="gone"
 			android:textSize="10sp"/>
 
