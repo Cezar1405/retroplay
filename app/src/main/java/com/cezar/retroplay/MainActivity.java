@@ -11,6 +11,7 @@ import android.net.*;
 import android.os.*;
 import android.support.v4.util.*;
 import android.support.v7.widget.*;
+import android.util.*;
 import android.view.*;
 import android.webkit.*;
 import android.widget.*;
@@ -19,6 +20,8 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import org.json.*;
+
+import android.support.v4.util.LruCache;
 
 public class MainActivity extends Activity
 {
@@ -39,6 +42,11 @@ public class MainActivity extends Activity
 	private boolean isDownloading = false;
 	private RecyclerView recyclerRoms;
 	private int lastFocusedRomIndex = 0;
+	private ImageView ajustes;
+	String basePath = Environment.getExternalStorageDirectory() + "/retroplay/listas/"; // importante el /
+	String baseOcultas = Environment.getExternalStorageDirectory() + "/retroplay/listasB/";
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -80,6 +88,14 @@ public class MainActivity extends Activity
 
 		searchBox = findViewById(R.id.searchBox);
 		systemSlider = (RecyclerView) findViewById(R.id.systemSlider);
+		
+		ajustes = findViewById(R.id.ajustes);
+		ajustes.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mostrarDialogoSistemas();
+				}
+			});
 
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 		systemSlider.setLayoutManager(layoutManager);
@@ -1498,6 +1514,150 @@ public class MainActivity extends Activity
 		espacioTextView.setText(obtenerEspacioAlmacenamiento());
 	}
 	//fin
+	
+	//metodo para mostrar u ocultar sistemas
+	private void mostrarDialogoSistemas() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View dialogView = inflater.inflate(R.layout.dialog_sistemas, null);
+		ListView lista = (ListView) dialogView.findViewById(R.id.listaSistemas);
+
+		// Carpetas
+		final File carpetaVisible = new File(basePath);
+		final File carpetaOculta = new File(baseOcultas);
+		if (!carpetaOculta.exists()) carpetaOculta.mkdirs();
+
+		final ArrayList<SistemaItem> listaSistemas = new ArrayList<SistemaItem>();
+
+		// Archivos visibles
+		File[] visibles = carpetaVisible.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".txt");
+				}
+			});
+		if (visibles != null) {
+			for (File f : visibles) {
+				if (f.getName().equals("ocultas")) continue;
+				listaSistemas.add(new SistemaItem(f.getName().replace(".txt", ""), false));
+			}
+		}
+
+		// Archivos ocultos
+		File[] ocultos = carpetaOculta.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".txt");
+				}
+			});
+		if (ocultos != null) {
+			for (File f : ocultos) {
+				listaSistemas.add(new SistemaItem(f.getName().replace(".txt", ""), true));
+			}
+		}
+
+		final SistemaDialogAdapter adapter = new SistemaDialogAdapter(this, listaSistemas);
+		lista.setAdapter(adapter);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setView(dialogView);
+		builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					for (SistemaItem sistema : listaSistemas) {
+						moverSistemaArchivo(sistema);
+					}
+					recreate(); // recarga la pantalla principal
+				}
+			});
+		builder.setNegativeButton("Cancelar", null);
+		builder.show();
+	}
+
+// Método para mover archivos (copia + elimina)
+	private boolean moverArchivo(File origen, File destino) {
+		if (!origen.exists()) return false;
+
+		try {
+			// Crear carpeta destino si no existe
+			File parent = destino.getParentFile();
+			if (!parent.exists()) parent.mkdirs();
+
+			// Copiar archivo
+			FileInputStream in = new FileInputStream(origen);
+			FileOutputStream out = new FileOutputStream(destino);
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
+			}
+			in.close();
+			out.close();
+
+			// Intentar eliminar
+			boolean borrado = origen.delete();
+			if (!borrado) {
+				Log.e("MOVE", "No se pudo borrar: " + origen.getAbsolutePath());
+				origen.deleteOnExit(); // último recurso
+			}
+
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+// Método para mover sistema según si está marcado
+	private void moverSistemaArchivo(SistemaItem sistema) {
+		File archivoListas = new File(basePath + sistema.nombre + ".txt");
+		File archivoOcultas = new File(baseOcultas + sistema.nombre + ".txt"); // usar baseOcultas
+
+		if (sistema.oculto) {
+			// Mover a la carpeta de ocultos (listasB)
+			moverArchivo(archivoListas, archivoOcultas);
+		} else {
+			// Restaurar de ocultos a listas
+			moverArchivo(archivoOcultas, archivoListas);
+		}
+	}
+
+// Clase auxiliar
+	static class SistemaItem {
+		String nombre;
+		boolean oculto;
+		SistemaItem(String n, boolean o) { nombre = n; oculto = o; }
+	}
+
+// Adaptador sin lambdas
+	class SistemaDialogAdapter extends ArrayAdapter<SistemaItem> {
+		public SistemaDialogAdapter(Context ctx, ArrayList<SistemaItem> sistemas) {
+			super(ctx, 0, sistemas);
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext())
+					.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
+			}
+
+			final SistemaItem s = getItem(position);
+			final CheckedTextView check = (CheckedTextView) convertView;
+			check.setText(s.nombre.toUpperCase());
+			check.setChecked(s.oculto);
+
+			check.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						s.oculto = !s.oculto;
+						check.setChecked(s.oculto);
+					}
+				});
+
+			return convertView;
+		}
+	}
+	//
 
 	private List<Juego> leerJuegosDesdeArchivo(File archivo)
 	{
