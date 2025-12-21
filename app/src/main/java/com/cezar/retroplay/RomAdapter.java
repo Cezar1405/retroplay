@@ -14,6 +14,12 @@ public class RomAdapter extends RecyclerView.Adapter<RomAdapter.ViewHolder> {
 	private List<Juego> juegosOriginales;
 	private Context context;
 	private OnRomListener listener;
+	private int posFocused = RecyclerView.NO_POSITION;
+	private boolean searchBoxTieneFoco = false;
+
+	public void setSearchBoxFoco(boolean tieneFoco) {
+		this.searchBoxTieneFoco = tieneFoco;
+	}
 
 	public interface OnRomListener {
 		void onRomClicked(Juego juego);
@@ -48,6 +54,14 @@ public class RomAdapter extends RecyclerView.Adapter<RomAdapter.ViewHolder> {
 	public void actualizarLista(List<Juego> nuevaLista) {
 		this.juegos = new ArrayList<>(nuevaLista);
 		this.juegosOriginales = new ArrayList<>(nuevaLista);
+
+		// Si la lista no está vacía, enfocamos el primer item
+		if (!juegos.isEmpty()) {
+			posFocused = 0;
+		} else {
+			posFocused = RecyclerView.NO_POSITION;
+		}
+
 		notifyDataSetChanged();
 	}
 
@@ -67,7 +81,7 @@ public class RomAdapter extends RecyclerView.Adapter<RomAdapter.ViewHolder> {
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, int position) {
 		Juego juego = juegos.get(position);
 
 		String nombre = juego.getNombre().replaceAll("\\.[^.]+$", "");
@@ -78,6 +92,16 @@ public class RomAdapter extends RecyclerView.Adapter<RomAdapter.ViewHolder> {
 		holder.romName.setText(nombre);
 		holder.romName.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Exo2-BoldCondensed.otf"));
 		holder.itemView.setTag(juego);
+
+		// Mantener el foco solo si el searchBox NO está activo
+		if (!searchBoxTieneFoco && position == posFocused) {
+			holder.itemView.post(new Runnable() {
+					@Override
+					public void run() {
+						holder.itemView.requestFocus();
+					}
+				});
+		}
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
@@ -93,11 +117,10 @@ public class RomAdapter extends RecyclerView.Adapter<RomAdapter.ViewHolder> {
 			itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
-						if (hasFocus && listener != null) {
-							int pos = getAdapterPosition();
-							if (pos != RecyclerView.NO_POSITION) {
-								listener.onRomFocused(juegos.get(pos));
-							}
+						int pos = getAdapterPosition();
+						if (pos != RecyclerView.NO_POSITION && hasFocus) {
+							posFocused = pos; // <--- guardas la posición
+							if (listener != null) listener.onRomFocused(juegos.get(pos));
 						}
 					}
 				});

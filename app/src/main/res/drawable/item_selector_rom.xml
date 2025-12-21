@@ -1,5 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:state_focused="true" android:drawable="@drawable/focused_rom"/>
-	<item android:state_pressed="true" android:drawable="@drawable/focused_rom"/>
-	<item android:drawable="@android:color/transparent"/>
+
+    <!-- Focus: azul eléctrico translúcido -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#771E88FF"/> <!-- 20% alpha sobre #1E88FF -->
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <!-- Pressed: un poco más opaco -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#551E88FF"/> <!-- 33% alpha -->
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <!-- Normal: transparente -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000"/>
+            <corners android:radius="4dp"/>
+        </shape>
+    </item>
+
 </selector>

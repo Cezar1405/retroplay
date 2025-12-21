@@ -2,6 +2,7 @@ package com.cezar.retroplay;
 
 import java.util.List;
 
+
 public class Sistema {
 	private String nombre;
 	private List<Juego> juegos;
@@ -18,4 +19,9 @@ public class Sistema {
 	public List<Juego> getJuegos() {
 		return juegos;
 	}
+	
+	private boolean estaFocado = false;
+
+	public boolean isFocado() { return estaFocado; }
+	public void setFocado(boolean foco) { estaFocado = foco; }
 }

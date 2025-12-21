@@ -20,6 +20,7 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.ViewHolder
 
 	private OnSystemFocusListener focusListener;
 	private OnSystemClickListener clickListener;
+	private int posFocused = RecyclerView.NO_POSITION;
 
 	public void setOnSystemFocusListener(OnSystemFocusListener listener) {
 		this.focusListener = listener;
@@ -36,8 +37,12 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.ViewHolder
 	public interface OnSystemClickListener {
 		void onSystemClicked(Sistema sistema);
 	}
+	
+	public int getPosFocused() {
+		return posFocused;
+	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
+	public class ViewHolder extends RecyclerView.ViewHolder {
 		public ImageView icon;
 		public TextView name;
 
@@ -54,15 +59,25 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.ViewHolder
 			view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
-						if (hasFocus) {
-							v.animate().scaleX(1.3f).scaleY(1.3f).setDuration(150).start();
-							int pos = getAdapterPosition();
-							if (focusListener != null && pos != RecyclerView.NO_POSITION) {
-								Sistema sistema = sistemas.get(pos);
-								focusListener.onSystemFocused(sistema);
+						int pos = getAdapterPosition();
+						if (pos != RecyclerView.NO_POSITION) {
+							Sistema sistema = sistemaList.get(pos);
+							sistema.setFocado(hasFocus);
+
+							// Actualizar posFocused
+							if (hasFocus) {
+								posFocused = pos;
+							} else if (posFocused == pos) {
+								posFocused = RecyclerView.NO_POSITION;
 							}
-						} else {
-							v.animate().scaleX(1f).scaleY(1f).setDuration(150).start();
+						}
+
+						v.animate().scaleX(hasFocus ? 1.3f : 1f)
+							.scaleY(hasFocus ? 1.3f : 1f)
+							.setDuration(150).start();
+
+						if (hasFocus && focusListener != null) {
+							focusListener.onSystemFocused(sistemaList.get(pos));
 						}
 					}
 				});
@@ -97,10 +112,28 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.ViewHolder
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, int position) {
 		final Sistema sistema = sistemaList.get(position);
 		holder.name.setText(sistema.getNombre());
 
+		// Restaurar animación según si es el item enfocado
+		if (position == posFocused) {
+			holder.itemView.setScaleX(1.3f);
+			holder.itemView.setScaleY(1.3f);
+
+			// Post para asegurarnos que la vista está lista
+			holder.itemView.post(new Runnable() {
+					@Override
+					public void run() {
+						holder.itemView.requestFocus();
+					}
+				});
+		} else {
+			holder.itemView.setScaleX(1f);
+			holder.itemView.setScaleY(1f);
+		}
+
+		// Cargar icono del sistema
 		try {
 			String ruta = "sistemas/" + sistema.getNombre() + ".webp";
 			InputStream is = context.getAssets().open(ruta);

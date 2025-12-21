@@ -7,8 +7,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Selecciona los sistemas que quieres ocultar"
-        android:textSize="14sp"
+        android:text="Selecciona los sistemas a ocultar"
+        android:textSize="18sp"
+		android:textStyle="bold"
         android:textColor="#000"
         android:paddingBottom="10dp" />
 
@@ -16,5 +17,7 @@
         android:id="@+id/listaSistemas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+		choiceMode="multipleChoice"
+		android:clickable="true"
         android:dividerHeight="10dp"/>
 </LinearLayout>

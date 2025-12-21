@@ -44,7 +44,7 @@ public class MainActivity extends Activity
 	private int lastFocusedRomIndex = 0;
 	private ImageView ajustes;
 	String basePath = Environment.getExternalStorageDirectory() + "/retroplay/listas/"; // importante el /
-	String baseOcultas = Environment.getExternalStorageDirectory() + "/retroplay/listasB/";
+	String baseOcultas = Environment.getExternalStorageDirectory() + "/retroplay/listas/ocultas/";
 
 
 
@@ -216,17 +216,7 @@ public class MainActivity extends Activity
 		return configs;
 	}
 	
-	private void resetRecyclerAnimations(RecyclerView rv) {
-		if (rv != null) {
-			for (int i = 0; i < rv.getChildCount(); i++) {
-				View child = rv.getChildAt(i);
-				child.animate().cancel();
-				child.setScaleX(1f);
-				child.setScaleY(1f);
-			}
-		}
-	}
-
+	
 	private void cargarSistemas()
 	{
 		File carpeta = new File(Environment.getExternalStorageDirectory(), "retroplay/listas/");
@@ -234,6 +224,7 @@ public class MainActivity extends Activity
 		{
 			File[] archivos = carpeta.listFiles();
 			if (archivos != null)
+				Arrays.sort(archivos);
 			{
 				for (int i = 0; i < archivos.length; i++)
 				{
@@ -369,18 +360,42 @@ public class MainActivity extends Activity
 
 		systemSlider.setAdapter(adapter);
 
+	// Restaurar foco del sistema previamente enfocado
+		int posFoco = -1;
+		for (int i = 0; i < sistemas.size(); i++) {
+			if (sistemas.get(i).isFocado()) {
+				posFoco = i;
+				break;
+			}
+		}
+
+		final int focoParaRunnable = posFoco; // sí necesitas final aquí para el Runnable
+
 		systemSlider.post(new Runnable() {
 				@Override
-				public void run()
-				{
-					View firstItem = systemSlider.getLayoutManager().findViewByPosition(0);
-					if (firstItem != null)
-					{
-						firstItem.requestFocus();
+				public void run() {
+					if (focoParaRunnable != -1) {
+						RecyclerView.ViewHolder vh = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+						if (vh != null) {
+							vh.itemView.requestFocus();
+						} else {
+							systemSlider.scrollToPosition(focoParaRunnable);
+							systemSlider.post(new Runnable() {
+									@Override
+									public void run() {
+										RecyclerView.ViewHolder vh2 = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+										if (vh2 != null) vh2.itemView.requestFocus();
+									}
+								});
+						}
+					} else {
+						View firstItem = systemSlider.getLayoutManager().findViewByPosition(0);
+						if (firstItem != null) firstItem.requestFocus();
 					}
 				}
 			});
 	}
+	
 	//Configuracion de los emuladores predeterminados
 	private void guardarConfiguracionSistema(List<SystemConfig> listaConfigs) {
 		try {
@@ -418,20 +433,25 @@ public class MainActivity extends Activity
 		File ocultasDir = new File(listasDir, "ocultas");
 		File confDir = new File(baseDir, "conf");
 
-		// Crear carpetas si no existen
 		if (!listasDir.exists()) listasDir.mkdirs();
 		if (!ocultasDir.exists()) ocultasDir.mkdirs();
 		if (!confDir.exists()) confDir.mkdirs();
 
-		// Copiar todas las listas .txt desde assets/listas/
-		copiarDirectorioAssetsFiltrado("listas", listasDir, ".txt");
+		// --- SOLO COPIA SI LA CARPETA LISTAS ESTÁ VACÍA ---
+		if (carpetaVacia(listasDir)) {
+			copiarDirectorioAssetsFiltrado("listas", listasDir, ".txt");
+		}
 
-		// Copiar configuraciones específicas desde assets/
 		copiarAssetSiNoExiste("emuladores.json", new File(confDir, "emuladores.json"));
 		copiarAssetSiNoExiste("system_config.json", new File(confDir, "system_config.json"));
 	}
 
-// Copia un archivo si no existe aún
+	private boolean carpetaVacia(File dir) {
+		File[] archivos = dir.listFiles();
+		return archivos == null || archivos.length == 0;
+	}
+
+// Copia un archivos de configuraciones si no existe aún
 	private void copiarAssetSiNoExiste(String assetPath, File destino) {
 		try {
 			if (!destino.exists()) {
@@ -451,7 +471,7 @@ public class MainActivity extends Activity
 		}
 	}
 
-// Copia solo archivos con cierta extensión (.txt en este caso)
+// Copia solo sistemas en txt si no existen
 	private void copiarDirectorioAssetsFiltrado(String assetDir, File destinoDir, String extension) {
 		try {
 			String[] archivos = getAssets().list(assetDir);
@@ -483,6 +503,7 @@ public class MainActivity extends Activity
 	//
 
 	private RomAdapter romListAdapter; // atributo de clase para usarlo en el filtro
+	private SystemAdapter systemAdapter; // atributo de clase para usarlo en el filtro
 	
 	private boolean deleteRecursive(File fileOrDir)
 	{
@@ -553,8 +574,6 @@ public class MainActivity extends Activity
 
 	private void cargarRomsDelSistema(final Sistema sistema)
 	{
-		resetRecyclerAnimations(systemSlider);
-		resetRecyclerAnimations(recyclerRoms);
 		if (searchBox != null) {
 			searchBox.setText("");
 		}
@@ -587,7 +606,8 @@ public class MainActivity extends Activity
 
 		// Fondo cabinet default
 		ImageView baseCabinet = findViewById(R.id.baseCabinet);
-		String claveFondoBase = "cabinets/default_back.webp";
+		baseCabinet.setAlpha(0.3f);
+		String claveFondoBase = "fondos/" + sistema.getNombre() + ".webp";
 
 		Bitmap fondoBase = getBitmapFromMemCache(claveFondoBase);
 		if (fondoBase != null) {
@@ -672,8 +692,9 @@ public class MainActivity extends Activity
 							.setPositiveButton("Retroplay", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
+
 									if (romUrl.contains("mediafire.com")) {
-										// Si es MediaFire, obtener enlace directo
+										// MediaFire
 										getMediaFireDirectUrl(romUrl, new MediaFireCallback() {
 												@Override
 												public void onSuccess(String directUrl) {
@@ -825,6 +846,13 @@ public class MainActivity extends Activity
 				}
 				@Override
 				public void afterTextChanged(android.text.Editable s) {}
+			});
+			
+		searchBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					romListAdapter.setSearchBoxFoco(hasFocus);
+				}
 			});
 
 		sistemaActual = sistema;
@@ -1418,45 +1446,53 @@ public class MainActivity extends Activity
 	//fin videopreview
 
 	//filtro descargados
-	private void actualizarListaDeJuegos()
-	{
+	private void actualizarListaDeJuegos() {
 		if (romListAdapter == null || sistemaActual == null) return;
 
-		List<Juego> todos = sistemaActual.getJuegos();
-		List<Juego> filtrados = new ArrayList<>();
+		// Creamos un nuevo hilo para no bloquear la UI
+		Thread hilo = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					List<Juego> todos = sistemaActual.getJuegos();
+					final List<Juego> filtrados = new ArrayList<Juego>();
 
-		File carpeta = new File(Environment.getExternalStorageDirectory(), "/retroplay/temp_download/" + sistemaActual.getNombre());
+					File carpeta = new File(Environment.getExternalStorageDirectory(),
+											"/retroplay/temp_download/" + sistemaActual.getNombre());
 
-		for (Juego juego : todos)
-		{
-			String nombreRom = juego.getNombre();
-			String baseName = nombreRom.replaceAll("\\.[^.]+$", ""); // Quitar extensión
-
-			boolean descargado = false;
-
-			if (carpeta.exists() && carpeta.isDirectory())
-			{
-				File[] archivos = carpeta.listFiles();
-				if (archivos != null)
-				{
-					for (File archivo : archivos)
-					{
-						if (archivo.getName().startsWith(baseName))
-						{
-							descargado = true;
-							break;
+					// Crear un Set con los nombres de los archivos descargados (sin extensión)
+					Set<String> archivosDescargados = new HashSet<String>();
+					if (carpeta.exists() && carpeta.isDirectory()) {
+						File[] archivos = carpeta.listFiles();
+						if (archivos != null) {
+							for (int i = 0; i < archivos.length; i++) {
+								String nombreSinExt = archivos[i].getName().replaceAll("\\.[^.]+$", "");
+								archivosDescargados.add(nombreSinExt);
+							}
 						}
 					}
+
+					// Filtrar los juegos según mostrarSoloDescargados
+					for (int j = 0; j < todos.size(); j++) {
+						Juego juego = todos.get(j);
+						String baseName = juego.getNombre().replaceAll("\\.[^.]+$", "");
+						boolean descargado = archivosDescargados.contains(baseName);
+
+						if (!mostrarSoloDescargados || descargado) {
+							filtrados.add(juego);
+						}
+					}
+
+					// Actualizar el adapter en el hilo principal
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								romListAdapter.actualizarLista(filtrados);
+							}
+						});
 				}
-			}
+			});
 
-			if (!mostrarSoloDescargados || descargado)
-			{
-				filtrados.add(juego);
-			}
-		}
-
-		romListAdapter.actualizarLista(filtrados);
+		hilo.start();
 	}
 	//fin descargados
 
@@ -1519,7 +1555,7 @@ public class MainActivity extends Activity
 	private void mostrarDialogoSistemas() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View dialogView = inflater.inflate(R.layout.dialog_sistemas, null);
-		ListView lista = (ListView) dialogView.findViewById(R.id.listaSistemas);
+		final ListView lista = (ListView) dialogView.findViewById(R.id.listaSistemas);
 
 		// Carpetas
 		final File carpetaVisible = new File(basePath);
@@ -1536,9 +1572,19 @@ public class MainActivity extends Activity
 				}
 			});
 		if (visibles != null) {
+
+			// Orden alfabético SIN lambdas
+			Arrays.sort(visibles, new Comparator<File>() {
+					@Override
+					public int compare(File a, File b) {
+						return a.getName().compareToIgnoreCase(b.getName());
+					}
+				});
+
 			for (File f : visibles) {
-				if (f.getName().equals("ocultas")) continue;
-				listaSistemas.add(new SistemaItem(f.getName().replace(".txt", ""), false));
+				String id = f.getName().replace(".txt", "");
+				String nombreMostrado = obtenerNombreSistemaBonito(id);
+				listaSistemas.add(new SistemaItem(id, nombreMostrado, false));
 			}
 		}
 
@@ -1550,26 +1596,67 @@ public class MainActivity extends Activity
 				}
 			});
 		if (ocultos != null) {
+
+			// Orden alfabético SIN lambdas
+			Arrays.sort(ocultos, new Comparator<File>() {
+					@Override
+					public int compare(File a, File b) {
+						return a.getName().compareToIgnoreCase(b.getName());
+					}
+				});
+
 			for (File f : ocultos) {
-				listaSistemas.add(new SistemaItem(f.getName().replace(".txt", ""), true));
+				String id = f.getName().replace(".txt", "");
+				String nombreMostrado = obtenerNombreSistemaBonito(id);
+				listaSistemas.add(new SistemaItem(id, nombreMostrado, true));
 			}
 		}
 
 		final SistemaDialogAdapter adapter = new SistemaDialogAdapter(this, listaSistemas);
 		lista.setAdapter(adapter);
+		lista.setItemsCanFocus(true);
+		lista.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setView(dialogView);
+
+// Se mantiene
+		lista.setItemsCanFocus(true);
+		lista.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+// Adapter
+		lista.setAdapter(adapter);
+
+// --- SINCRONIZACIÓN IMPORTANTE ---
+		for (int i = 0; i < listaSistemas.size(); i++) {
+			SistemaItem s = listaSistemas.get(i);
+			lista.setItemChecked(i, s.oculto);
+		}
+
+// --- MANEJO DE CLICK SIN LAMBDAS ---
+		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					SistemaItem s = listaSistemas.get(position);
+					s.oculto = !s.oculto;                       // actualiza modelo
+					lista.setItemChecked(position, s.oculto);   // actualiza UI
+				}
+			});
+
+// Botón Guardar sin lambdas
 		builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					for (SistemaItem sistema : listaSistemas) {
 						moverSistemaArchivo(sistema);
 					}
-					recreate(); // recarga la pantalla principal
+					recreate();
 				}
 			});
+
+// Botón Cancelar
 		builder.setNegativeButton("Cancelar", null);
+
 		builder.show();
 	}
 
@@ -1609,8 +1696,8 @@ public class MainActivity extends Activity
 
 // Método para mover sistema según si está marcado
 	private void moverSistemaArchivo(SistemaItem sistema) {
-		File archivoListas = new File(basePath + sistema.nombre + ".txt");
-		File archivoOcultas = new File(baseOcultas + sistema.nombre + ".txt"); // usar baseOcultas
+		File archivoListas = new File(basePath + sistema.id + ".txt");
+		File archivoOcultas = new File(baseOcultas + sistema.id + ".txt");
 
 		if (sistema.oculto) {
 			// Mover a la carpeta de ocultos (listasB)
@@ -1621,15 +1708,32 @@ public class MainActivity extends Activity
 		}
 	}
 
+//obteniendo nombres de los sistenas
+	private String obtenerNombreSistemaBonito(String idSistema) {
+		for (SystemConfig sc : systemConfigs) {
+			if (sc.system.equalsIgnoreCase(idSistema)) {
+				return sc.nombre; // retorna el nombre descriptivo
+			}
+		}
+		return idSistema; // fallback si no se encuentra en JSON
+	}
+
 // Clase auxiliar
 	static class SistemaItem {
-		String nombre;
+		String id;     // nombre real del archivo
+		String nombre; // nombre bonito mostrado
 		boolean oculto;
-		SistemaItem(String n, boolean o) { nombre = n; oculto = o; }
+
+		SistemaItem(String id, String nombre, boolean oculto) {
+			this.id = id;
+			this.nombre = nombre;
+			this.oculto = oculto;
+		}
 	}
 
 // Adaptador sin lambdas
 	class SistemaDialogAdapter extends ArrayAdapter<SistemaItem> {
+
 		public SistemaDialogAdapter(Context ctx, ArrayList<SistemaItem> sistemas) {
 			super(ctx, 0, sistemas);
 		}
@@ -1641,18 +1745,17 @@ public class MainActivity extends Activity
 					.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
 			}
 
-			final SistemaItem s = getItem(position);
-			final CheckedTextView check = (CheckedTextView) convertView;
-			check.setText(s.nombre.toUpperCase());
-			check.setChecked(s.oculto);
+			SistemaItem s = getItem(position);
+			CheckedTextView check = (CheckedTextView) convertView;
 
-			check.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						s.oculto = !s.oculto;
-						check.setChecked(s.oculto);
-					}
-				});
+			check.setText(s.nombre.toUpperCase());
+			check.setTextSize(14);
+
+			// ❗ Importante: NO USAR setChecked aquí
+			// El ListView se encarga de eso con setItemChecked()
+
+			// ❗ También quitar cualquier listener
+			// check.setOnClickListener(...) → ELIMINADO
 
 			return convertView;
 		}
@@ -1694,168 +1797,241 @@ public class MainActivity extends Activity
 		View container = findViewById(R.id.container);
 		View uiApp = findViewById(R.id.uiApp);
 
-		if (container.getVisibility() == View.VISIBLE)
-		{
-			EditText searchBox = findViewById(R.id.searchBox);
-			if (searchBox != null)
-			{
-				searchBox.setText("");
-			}
-			// Volver a la pantalla principal
-			container.setVisibility(View.GONE);
-			uiApp.setVisibility(View.VISIBLE);
-
-			//findViewById(R.id.container).setVisibility(View.GONE);    
-			//findViewById(R.id.sliderScroll).setVisibility(View.VISIBLE);
-			findViewById(R.id.dynamicCover).setVisibility(View.GONE);
-			findViewById(R.id.videoPreview).setVisibility(View.GONE);
-			findViewById(R.id.romTitle).setVisibility(View.GONE);
-			findViewById(R.id.romSize).setVisibility(View.GONE);
-			//findViewById(R.id.searchBox).setVisibility(View.GONE);
-			//final ImageView dynamicBackground = findViewById(R.id.dynamicBackground);
-		    //dynamicBackground.setImageResource(R.drawable.background_image);
-			findViewById(R.id.dynamic3dbox).setVisibility(View.GONE);
-			findViewById(R.id.dynamicScreenshot).setVisibility(View.GONE);
-			findViewById(R.id.dynamicMarquee).setVisibility(View.GONE);
-			//findViewById(R.id.espacioDisp).setVisibility(View.GONE);
-			//findViewById(R.id.dynamicScreenshot).setVisibility(View.GONE);
-			//findViewById(R.id.toggleList).setVisibility(View.GONE);
-			//findViewById(R.id.paypalButton).setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			// Confirmar salida
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Salir de RetroPlay");
-			builder.setMessage("¿Estás seguro de que deseas salir?");
-			builder.setPositiveButton("Sí, salir", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						finish(); // Cierra la app
-					}
-				});
-			builder.setNegativeButton("No", null);
-			builder.show();
-		}
-	}
-	
-	// BroadcastReceiver para manejar las descargas
-	private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			String romName = intent.getStringExtra("romName");
-			String action = intent.getAction();
-
-			switch (action)
+		if (container.getVisibility() == View.VISIBLE)  
+		{  
+			EditText searchBox = findViewById(R.id.searchBox);  
+			if (searchBox != null)  
 			{  
-				case "DOWNLOAD_START":  
-					// Evitar mostrar dos veces el mismo dialog  
-					if (!romName.equals(currentRomName) || downloadProgressDialog == null || !downloadProgressDialog.isShowing())
-					{  
-						currentRomName = romName;  
-						lastProgress = 0;  
-						isDownloading = true;  
-						showDownloadDialog(romName);  
-					}  
-					break;  
-
-				case "DOWNLOAD_PROGRESS":  
-					int progress = intent.getIntExtra("progress", 0);  
-					lastProgress = progress;  
-					updateDownloadProgress(progress);  
-					break;  
-
-				case "DOWNLOAD_COMPLETE":  
-					isDownloading = false;  
-					Toast.makeText(MainActivity.this, romName + " listo", Toast.LENGTH_SHORT).show();  
-					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();  
-					break;  
-
-				case "DOWNLOAD_ERROR":  
-					isDownloading = false;  
-					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();  
-					Toast.makeText(MainActivity.this, "Error con " + romName, Toast.LENGTH_SHORT).show();  
-					break;  
-
-				case "DOWNLOAD_CANCELLED":  
-					isDownloading = false;  
-					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();  
-					Toast.makeText(MainActivity.this, "Descarga cancelada: " + romName, Toast.LENGTH_SHORT).show();  
-					break;  
+				searchBox.setText("");  
 			}  
+			// Volver a la pantalla principal  
+			container.setVisibility(View.GONE);  
+			uiApp.setVisibility(View.VISIBLE);  
+
+			//findViewById(R.id.container).setVisibility(View.GONE);      
+			//findViewById(R.id.sliderScroll).setVisibility(View.VISIBLE);  
+			findViewById(R.id.dynamicCover).setVisibility(View.GONE);  
+			findViewById(R.id.videoPreview).setVisibility(View.GONE);  
+			findViewById(R.id.romTitle).setVisibility(View.GONE);  
+			findViewById(R.id.romSize).setVisibility(View.GONE);  
+			//findViewById(R.id.searchBox).setVisibility(View.GONE);  
+			//final ImageView dynamicBackground = findViewById(R.id.dynamicBackground);  
+			//dynamicBackground.setImageResource(R.drawable.background_image);  
+			findViewById(R.id.dynamic3dbox).setVisibility(View.GONE);  
+			findViewById(R.id.dynamicScreenshot).setVisibility(View.GONE);  
+			findViewById(R.id.dynamicMarquee).setVisibility(View.GONE);  
+			//findViewById(R.id.espacioDisp).setVisibility(View.GONE);  
+			//findViewById(R.id.dynamicScreenshot).setVisibility(View.GONE);  
+			//findViewById(R.id.toggleList).setVisibility(View.GONE);  
+			//findViewById(R.id.paypalButton).setVisibility(View.VISIBLE);  
 		}  
-	};
+		else  
+		{  
+			// Confirmar salida  
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);  
+			builder.setTitle("Salir de RetroPlay");  
+			builder.setMessage("¿Estás seguro de que deseas salir?");  
+			builder.setPositiveButton("Sí, salir", new DialogInterface.OnClickListener() {  
+					@Override  
+					public void onClick(DialogInterface dialog, int which)  
+					{  
+						finish(); // Cierra la app  
+					}  
+				});  
+			builder.setNegativeButton("No", null);  
+			builder.show();  
+		}  
+	}  
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
+// BroadcastReceiver para manejar las descargas  
+	private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {  
+		@Override  
+		public void onReceive(Context context, Intent intent)  
+		{  
+			String romName = intent.getStringExtra("romName");  
+			String action = intent.getAction();  
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("DOWNLOAD_START");
-		filter.addAction("DOWNLOAD_PROGRESS");
-		filter.addAction("DOWNLOAD_COMPLETE");
-		filter.addAction("DOWNLOAD_ERROR");
-		filter.addAction("DOWNLOAD_CANCELLED");
-		registerReceiver(downloadReceiver, filter);
+			switch (action)  
+			{    
+				case "DOWNLOAD_START":    
+					// Evitar mostrar dos veces el mismo dialog    
+					if (!romName.equals(currentRomName) || downloadProgressDialog == null || !downloadProgressDialog.isShowing())  
+					{    
+						currentRomName = romName;    
+						lastProgress = 0;    
+						isDownloading = true;    
+						showDownloadDialog(romName);    
+					}    
+					break;    
 
-		// Si la descarga sigue (podés usar una bandera como isDownloading)
-		if (isDownloading && downloadProgressDialog == null)
-		{
-			showDownloadDialog(currentRomName); // Tu rom actual
-			updateDownloadProgress(lastProgress);
-		}
+				case "DOWNLOAD_PROGRESS":    
+					int progress = intent.getIntExtra("progress", 0);    
+					lastProgress = progress;    
+					updateDownloadProgress(progress);    
+					break;    
 
-		actualizarEspacio();
+				case "DOWNLOAD_COMPLETE":    
+					isDownloading = false;    
+					Toast.makeText(MainActivity.this, romName + " listo", Toast.LENGTH_SHORT).show();    
+					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();    
+					break;    
 
-		// 🔧 Solución para evitar offset o focus perdido tras volver
-		if (recyclerRoms != null && romListAdapter != null && romListAdapter.getItemCount() > 0)
-		{
-			recyclerRoms.post(new Runnable() {
+				case "DOWNLOAD_ERROR":    
+					isDownloading = false;    
+					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();    
+					Toast.makeText(MainActivity.this, "Error con " + romName, Toast.LENGTH_SHORT).show();    
+					break;    
+
+				case "DOWNLOAD_CANCELLED":    
+					isDownloading = false;    
+					if (downloadProgressDialog != null) downloadProgressDialog.dismiss();    
+					Toast.makeText(MainActivity.this, "Descarga cancelada: " + romName, Toast.LENGTH_SHORT).show();    
+					break;    
+			}    
+		}    
+	};  
+
+	@Override  
+	protected void onResume()  
+	{  
+		super.onResume();  
+
+		IntentFilter filter = new IntentFilter();  
+		filter.addAction("DOWNLOAD_START");  
+		filter.addAction("DOWNLOAD_PROGRESS");  
+		filter.addAction("DOWNLOAD_COMPLETE");  
+		filter.addAction("DOWNLOAD_ERROR");  
+		filter.addAction("DOWNLOAD_CANCELLED");  
+		registerReceiver(downloadReceiver, filter);  
+
+		// Si la descarga sigue (podés usar una bandera como isDownloading)  
+		if (isDownloading && downloadProgressDialog == null)  
+		{  
+			showDownloadDialog(currentRomName); // Tu rom actual  
+			updateDownloadProgress(lastProgress);  
+		}  
+
+		actualizarEspacio();  
+
+		// evitar offset en roms
+		if (recyclerRoms != null && romListAdapter != null && romListAdapter.getItemCount() > 0)  
+		{  
+			recyclerRoms.post(new Runnable() {  
+					@Override  
+					public void run() {  
+						// Forzar scroll al primer ítem (puedes cambiar a la posición deseada)  
+						recyclerRoms.scrollToPosition(lastFocusedRomIndex);  
+
+						// Esperar un poco más para pedir el focus  
+						recyclerRoms.postDelayed(new Runnable() {  
+								@Override  
+								public void run() {  
+									View item = recyclerRoms.getLayoutManager().findViewByPosition(lastFocusedRomIndex);  
+									if (item != null) {  
+										item.requestFocus();  
+									}  
+								}  
+							}, 100);  
+					}  
+				});  
+		}  
+		//evitar offset en sistemas
+		if (systemSlider != null && systemAdapter != null && systemAdapter.getItemCount() > 0) {
+			
+			int posFoco = -1;
+			for (int i = 0; i < sistemas.size(); i++) {
+				if (sistemas.get(i).isFocado()) {
+					posFoco = i;
+					break;
+				}
+			}
+			final int focoParaRunnable = posFoco; // sí necesitas final aquí para el Runnable
+			
+			systemSlider.post(new Runnable() {
 					@Override
 					public void run() {
-						// Forzar scroll al primer ítem (puedes cambiar a la posición deseada)
-						recyclerRoms.scrollToPosition(lastFocusedRomIndex);
-
-						// Esperar un poco más para pedir el focus
-						recyclerRoms.postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									View item = recyclerRoms.getLayoutManager().findViewByPosition(lastFocusedRomIndex);
-									if (item != null) {
-										item.requestFocus();
-									}
-								}
-							}, 100);
+						if (focoParaRunnable != -1) {
+							RecyclerView.ViewHolder vh = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+							if (vh != null) {
+								vh.itemView.requestFocus();
+							} else {
+								systemSlider.scrollToPosition(focoParaRunnable);
+								systemSlider.post(new Runnable() {
+										@Override
+										public void run() {
+											RecyclerView.ViewHolder vh2 = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+											if (vh2 != null) vh2.itemView.requestFocus();
+										}
+									});
+							}
+						} else {
+							View firstItem = systemSlider.getLayoutManager().findViewByPosition(0);
+							if (firstItem != null) firstItem.requestFocus();
+						}
 					}
 				});
 		}
-	}
+	}  
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		// 🔧 Solución para evitar offset o focus perdido tras volver
-		if (recyclerRoms != null && romListAdapter != null && romListAdapter.getItemCount() > 0)
-		{
-			recyclerRoms.post(new Runnable() {
+	@Override  
+	protected void onPause() {  
+		super.onPause();  
+		// 🔧 Solución para evitar offset o focus perdido tras volver  
+		if (recyclerRoms != null && romListAdapter != null && romListAdapter.getItemCount() > 0)  
+		{  
+			recyclerRoms.post(new Runnable() {  
+					@Override  
+					public void run() {  
+						// Forzar scroll al primer ítem (puedes cambiar a la posición deseada)  
+						recyclerRoms.scrollToPosition(lastFocusedRomIndex);  
+
+						// Esperar un poco más para pedir el focus  
+						recyclerRoms.postDelayed(new Runnable() {  
+								@Override  
+								public void run() {  
+									View item = recyclerRoms.getLayoutManager().findViewByPosition(lastFocusedRomIndex);  
+									if (item != null) {  
+										item.requestFocus();  
+									}  
+								}  
+							}, 100);  
+					}  
+				});  
+		}  
+		
+		//evitar offset en sistemas
+		if (systemSlider != null && systemAdapter != null && systemAdapter.getItemCount() > 0) {
+
+			int posFoco = -1;
+			for (int i = 0; i < sistemas.size(); i++) {
+				if (sistemas.get(i).isFocado()) {
+					posFoco = i;
+					break;
+				}
+			}
+			final int focoParaRunnable = posFoco; // sí necesitas final aquí para el Runnable
+
+			systemSlider.post(new Runnable() {
 					@Override
 					public void run() {
-						// Forzar scroll al primer ítem (puedes cambiar a la posición deseada)
-						recyclerRoms.scrollToPosition(lastFocusedRomIndex);
-
-						// Esperar un poco más para pedir el focus
-						recyclerRoms.postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									View item = recyclerRoms.getLayoutManager().findViewByPosition(lastFocusedRomIndex);
-									if (item != null) {
-										item.requestFocus();
-									}
-								}
-							}, 100);
+						if (focoParaRunnable != -1) {
+							RecyclerView.ViewHolder vh = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+							if (vh != null) {
+								vh.itemView.requestFocus();
+							} else {
+								systemSlider.scrollToPosition(focoParaRunnable);
+								systemSlider.post(new Runnable() {
+										@Override
+										public void run() {
+											RecyclerView.ViewHolder vh2 = systemSlider.findViewHolderForAdapterPosition(focoParaRunnable);
+											if (vh2 != null) vh2.itemView.requestFocus();
+										}
+									});
+							}
+						} else {
+							View firstItem = systemSlider.getLayoutManager().findViewByPosition(0);
+							if (firstItem != null) firstItem.requestFocus();
+						}
 					}
 				});
 		}
