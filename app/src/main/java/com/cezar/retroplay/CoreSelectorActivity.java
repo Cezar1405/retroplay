@@ -209,123 +209,76 @@ public class CoreSelectorActivity extends Activity
 	}
 
 	//iniciando retroarch
-    private void launchRetroArchWithRom(final String core, final String romPathOriginal)
-	{
-		if ("openbor".equals(system) || "snes-msu1".equals(system) || "megadrive-msu".equals(system) || "naomi".equals(system))
-		{
-			final File romFile = new File(romPathOriginal);
+    private void launchRetroArchWithRom(final String core, final String romPathOriginal) {
+		final File romFile = new File(romPathOriginal);
 
-			if (romFile.getName().toLowerCase().endsWith(".zip"))
-			{
-				// Mostrar diálogo de carga
-				final AlertDialog loadingDialog = createLoadingDialog("Descomprimiendo...");
-				loadingDialog.show();
+		if ("openbor".equals(system) || "snes-msu1".equals(system) || "dreamcast".equals(system) || "megadrive-msu".equals(system) || "naomi".equals(system)){
+			// Nombre base sin extensión
+			String baseName = romFile.getName();
+			int dot = baseName.lastIndexOf('.');
+			if (dot >= 0) baseName = baseName.substring(0, dot);
 
-				new Thread(new Runnable() {
-						@Override
-						public void run()
-						{
-							File descomprimido = null;
-							try
-							{
-								//deleteExtractedFiles(romFile); Limpiar antes de descomprimir
-								descomprimido = unzipAllAndFindRom(romFile);
+			File outputDir = new File(romFile.getParentFile(), baseName);
+			File firstRom = null;
 
-								if (descomprimido == null || !descomprimido.exists())
-								{
-									throw new IOException("No se encontró archivo dentro del ZIP");
-								}
+			if (outputDir.exists() && outputDir.isDirectory()) {
+				firstRom = findFirstRomInDir(outputDir);
+			}
 
-								final String finalRomPath = descomprimido.getAbsolutePath();
-
-								runOnUiThread(new Runnable() {
-										@Override
-										public void run()
-										{
-											loadingDialog.dismiss();
-											if (!tryLaunchRetroArch(RETROARCH_64BIT, core, finalRomPath))
-											{
-												tryLaunchRetroArch(RETROARCH_32BIT, core, finalRomPath);
-											}
-										}
-									});
-
-							}
-							catch (final Exception e)
-							{
-								e.printStackTrace();
-								final String errorMsg = e.getMessage();
-								runOnUiThread(new Runnable() {
-										@Override
-										public void run()
-										{
-											loadingDialog.dismiss();
-											Toast.makeText(CoreSelectorActivity.this, "Error: " + errorMsg, Toast.LENGTH_LONG).show();
-										}
-									});
-							}
-						}
-					}).start();
+			if (firstRom != null) {
+				// Ya existe ROM descomprimida, lanzar directo
+				final String finalRomPath = firstRom.getAbsolutePath();
+				if (!tryLaunchRetroArch(RETROARCH_64BIT, core, finalRomPath)) {
+					tryLaunchRetroArch(RETROARCH_32BIT, core, finalRomPath);
+				}
 				return;
 			}
 
-			if (romFile.getName().toLowerCase().endsWith(".patchzip"))
-			{
-				final AlertDialog loadingDialog = createLoadingDialog("Descomprimiendo MSU1...");
-				loadingDialog.show();
+			// Si no existe, descomprimir
+			final AlertDialog loadingDialog = createLoadingDialog("Descomprimiendo MSU1...");
+			loadingDialog.show();
 
-				new Thread(new Runnable() {
-						@Override
-						public void run()
-						{
-							File descomprimido = null;
-							try
-							{
-								deleteExtractedFiles(romFile); // Limpiar antes de descomprimir
-								descomprimido = unzipAllAndFindRom(romFile);
+			new Thread(new Runnable() {
+					@Override
+					public void run() {
+						File descomprimido = null;
+						try {
+							descomprimido = unzipAllAndFindRom(romFile);
 
-								if (descomprimido == null || !descomprimido.exists())
-								{
-									throw new IOException("No se encontró archivo dentro del ZIP");
-								}
-
-								final String finalRomPath = descomprimido.getAbsolutePath();
-
-								runOnUiThread(new Runnable() {
-										@Override
-										public void run()
-										{
-											loadingDialog.dismiss();
-											if (!tryLaunchRetroArch(RETROARCH_64BIT, core, finalRomPath))
-											{
-												tryLaunchRetroArch(RETROARCH_32BIT, core, finalRomPath);
-											}
-										}
-									});
-
+							if (descomprimido == null || !descomprimido.exists()) {
+								throw new IOException("No se encontró archivo dentro del ZIP");
 							}
-							catch (final Exception e)
-							{
-								e.printStackTrace();
-								final String errorMsg = e.getMessage();
-								runOnUiThread(new Runnable() {
-										@Override
-										public void run()
-										{
-											loadingDialog.dismiss();
-											Toast.makeText(CoreSelectorActivity.this, "Error: " + errorMsg, Toast.LENGTH_LONG).show();
+
+							final String finalRomPath = descomprimido.getAbsolutePath();
+
+							runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										loadingDialog.dismiss();
+										if (!tryLaunchRetroArch(RETROARCH_64BIT, core, finalRomPath)) {
+											tryLaunchRetroArch(RETROARCH_32BIT, core, finalRomPath);
 										}
-									});
-							}
+									}
+								});
+
+						} catch (final Exception e) {
+							e.printStackTrace();
+							final String errorMsg = e.getMessage();
+							runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										loadingDialog.dismiss();
+										Toast.makeText(CoreSelectorActivity.this, "Error: " + errorMsg, Toast.LENGTH_LONG).show();
+									}
+								});
 						}
-					}).start();
-				return;
-			}
+					}
+				}).start();
+			return;
 		}
 
-		// Si no es openbor o no es ZIP, lanzar directamente
-		if (!tryLaunchRetroArch(RETROARCH_64BIT, core, romPathOriginal))
-		{
+		// Flujo original para otros sistemas o ZIP normales
+		if (!tryLaunchRetroArch(RETROARCH_64BIT, core, romPathOriginal)) {
 			tryLaunchRetroArch(RETROARCH_32BIT, core, romPathOriginal);
 		}
 	}
@@ -1004,76 +957,76 @@ public class CoreSelectorActivity extends Activity
 	}
 
 	//descomprimiendo
-	private File unzipAllAndFindRom(File zipFile) throws IOException
-	{
+	private File unzipAllAndFindRom(File zipFile) throws IOException {
 		File zipDir = zipFile.getParentFile();
 
-		// Nombre de carpeta basado en el ZIP (sin extensión)
 		String zipName = zipFile.getName();
-		if (zipName.endsWith(".zip"))
-		{
-			zipName = zipName.substring(0, zipName.length() - 4);
+		int dot = zipName.lastIndexOf('.');
+		String zipExtension = "";
+		if (dot >= 0) {
+			zipExtension = zipName.substring(dot); // guardar extensión original
+			zipName = zipName.substring(0, dot);   // quitar extensión
 		}
+
 		File outputDir = new File(zipDir, zipName);
 
-		// Verificar si ya existe la carpeta con la ROM
-		if (outputDir.exists() && outputDir.isDirectory())
-		{
+		if (outputDir.exists()) {
 			File existingRom = findFirstRomInDir(outputDir);
 			if (existingRom != null) return existingRom;
 		}
 
-		// Descomprimir
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-		ZipEntry entry;
+		ZipFile zf = new ZipFile(zipFile);
+		Enumeration<? extends ZipEntry> entries = zf.entries();
+
 		File firstRom = null;
 
-		while ((entry = zis.getNextEntry()) != null)
-		{
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
 			File outFile = new File(outputDir, entry.getName());
 
-			if (entry.isDirectory())
-			{
+			if (entry.isDirectory()) {
 				outFile.mkdirs();
-			}
-			else
-			{
+			} else {
 				File parent = outFile.getParentFile();
 				if (!parent.exists()) parent.mkdirs();
 
+				InputStream is = zf.getInputStream(entry);
 				FileOutputStream fos = new FileOutputStream(outFile);
+
 				byte[] buffer = new byte[4096];
 				int len;
-				while ((len = zis.read(buffer)) > 0)
-				{
+				while ((len = is.read(buffer)) > 0) {
 					fos.write(buffer, 0, len);
 				}
-				fos.close();
-				zis.closeEntry();
 
-				if (firstRom == null && isRomFile(outFile.getName()))
-				{
+				fos.close();
+				is.close();
+
+				if (firstRom == null && isRomFile(outFile.getName())) {
 					firstRom = outFile;
 				}
 			}
 		}
-		zis.close();
 
-		// Reemplazar el ZIP con uno vacío ficticio
-		if (zipFile.exists())
-		{
-			zipFile.delete(); // Elimina el original
+		zf.close();
 
-			// Crea uno nuevo de 0 bytes (solo para simular su existencia)
-			boolean created = zipFile.createNewFile();
-			if (!created)
-			{
-				Log.w("ROM", "No se pudo crear el zip ficticio: " + zipFile.getName());
+		if (firstRom != null) {
+			// Borrar el archivo comprimido original
+			if (zipFile.exists()) zipFile.delete();
+
+			// Crear archivo ficticio 0KB con mismo nombre y extensión
+			File fakeFile = new File(zipDir, zipName + zipExtension);
+			if (!fakeFile.exists()) {
+				boolean created = fakeFile.createNewFile();
+				if (!created) {
+					Log.w("ROM", "No se pudo crear el archivo ficticio: " + fakeFile.getName());
+				}
 			}
+
+			return firstRom;
 		}
 
-		if (firstRom != null) return firstRom;
-		else throw new IOException("No se encontró una ROM válida.");
+		throw new IOException("No se encontró una ROM válida");
 	}
 
 	private File findFirstRomInDir(File dir)
@@ -1107,7 +1060,8 @@ public class CoreSelectorActivity extends Activity
 			lower.endsWith(".sfc") ||
 			lower.endsWith(".md") ||
 			lower.endsWith(".zip") ||
-			lower.endsWith(".bin") ||
+			lower.endsWith(".cdi") ||
+			lower.endsWith(".gdi") ||
 			lower.endsWith(".desktop");
 	}
 

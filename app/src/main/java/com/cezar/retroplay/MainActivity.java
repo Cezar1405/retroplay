@@ -115,12 +115,14 @@ public class MainActivity extends Activity
 			{
 				inicializarArchivosBase(); // 👈 copia listas, configuraciones y crea /ocultas
 				cargarSistemas();          // 👈 luego carga los sistemas
+				actualizarListaDeJuegos();
 			}
 		}
 		else
 		{
 			inicializarArchivosBase(); // 👈 versiones viejas
 			cargarSistemas();
+			actualizarListaDeJuegos();
 		}
 
 		obtenerEspacioAlmacenamiento();
@@ -355,6 +357,7 @@ public class MainActivity extends Activity
 					findViewById(R.id.container).setVisibility(View.VISIBLE);
 
 					cargarRomsDelSistema(sistema);
+					actualizarListaDeJuegos();
 				}
 			});
 
@@ -571,7 +574,100 @@ public class MainActivity extends Activity
 		webView.loadUrl(mediafireUrl);
 	}
 	//Fin proceso descarga mediafire
+	
+	//Proceso con CDromance
+	public interface CdRomanceCallback {
+		void onSuccess(String directUrl);
+		void onError(String error);
+	}
+	public void getCdRomanceDirectUrl(String pageUrl, final CdRomanceCallback callback) {
 
+		final WebView webView = findViewById(R.id.mediafireWebView);
+
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setDomStorageEnabled(true);
+		webView.getSettings().setUserAgentString("Mozilla/5.0");
+
+		webView.setWebViewClient(new WebViewClient() {
+
+				@Override
+				public void onPageFinished(WebView view, String url) {
+
+					// Paso 1: click al botón inicial
+					String jsClick =
+						"(function(){" +
+						"var btn=document.querySelector('.acf-get-content-button');" +
+						"if(btn){btn.click();return 'OK';}" +
+						"return 'NO_BTN';" +
+						"})();";
+
+					webView.evaluateJavascript(jsClick, new ValueCallback<String>() {
+							@Override
+							public void onReceiveValue(String value) {
+
+								if (value != null && value.contains("OK")) {
+									// Paso 2: iniciar polling
+									startPolling(webView, callback, 0);
+								} else {
+									callback.onError("Botón inicial no encontrado.");
+								}
+							}
+						});
+				}
+
+				@Override
+				public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+					callback.onError(description);
+				}
+			});
+
+		webView.loadUrl(pageUrl);
+	}
+	private void startPolling(
+		final WebView webView,
+		final CdRomanceCallback callback,
+		final int attempt
+	) {
+
+		if (attempt >= 5) {
+			callback.onError("Tiempo de espera agotado.");
+			return;
+		}
+
+		webView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+
+					String jsCheck =
+						"(function(){" +
+						"var link=document.getElementById('dl-btn-0');" +
+						"return link ? link.href : null;" +
+						"})();";
+
+					webView.evaluateJavascript(jsCheck, new ValueCallback<String>() {
+							@Override
+							public void onReceiveValue(String value) {
+
+								if (value != null && !value.equals("null")) {
+
+									String cleanUrl = value
+										.replaceAll("^\"|\"$", "")
+										.replace("\\u0026", "&");
+
+									callback.onSuccess(cleanUrl);
+
+								} else {
+									// Reintento
+									startPolling(webView, callback, attempt + 1);
+								}
+							}
+						});
+
+				}
+			}, 1000); // 1 segundo entre intentos
+	}
+	//Fin del proceso de CDRomance
+	
 	private void cargarRomsDelSistema(final Sistema sistema)
 	{
 		if (searchBox != null) {
@@ -694,6 +790,7 @@ public class MainActivity extends Activity
 								public void onClick(DialogInterface dialog, int which) {
 
 									if (romUrl.contains("mediafire.com")) {
+
 										// MediaFire
 										getMediaFireDirectUrl(romUrl, new MediaFireCallback() {
 												@Override
@@ -703,11 +800,32 @@ public class MainActivity extends Activity
 
 												@Override
 												public void onError(String errorMessage) {
-													Toast.makeText(MainActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+													Toast.makeText(MainActivity.this,
+																   "Error MediaFire: " + errorMessage,
+																   Toast.LENGTH_SHORT).show();
 												}
 											});
+
+									} else if (romUrl.contains("cdromance.org")) {
+
+										// CDRomance
+										getCdRomanceDirectUrl(romUrl, new CdRomanceCallback() {
+												@Override
+												public void onSuccess(String directUrl) {
+													startRomDownload(romName, directUrl, selectedSystem);
+												}
+
+												@Override
+												public void onError(String error) {
+													Toast.makeText(MainActivity.this,
+																   "Error CDRomance: " + error,
+																   Toast.LENGTH_SHORT).show();
+												}
+											});
+
 									} else {
-										// Descargar con la URL directa
+
+										// URL directa
 										startRomDownload(romName, romUrl, selectedSystem);
 									}
 								}
@@ -736,7 +854,7 @@ public class MainActivity extends Activity
 				}
 
 				@Override
-				public void onRomFocused(Juego juego) {
+				public void onRomFocused(final Juego juego) {
 					int index = juegos.indexOf(juego);
 					if (index >= 0) {
 						lastFocusedRomIndex = index;
@@ -756,42 +874,43 @@ public class MainActivity extends Activity
 					romSize.setText(juego.getPeso());
 					romSize.setTypeface(regular);
 					borrarRom.setTypeface(typeface);
-
-					// Mostrar botón de borrar solo si el archivo existe
-					final File file = new File(Environment.getExternalStorageDirectory(),
-											   "retroplay/temp_download/" + juego.getSistema() + "/" + juego.getNombre());
-
-					if (file.exists()) {
+					
+					//boton borrar
+					if (juego.isDescargado()) {
 						borrarRom.setVisibility(View.VISIBLE);
 					} else {
 						borrarRom.setVisibility(View.GONE);
 					}
 
-					// Accion al hacer click en borrar
+// Acción al hacer click en borrar
 					borrarRom.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								new AlertDialog.Builder(MainActivity.this)
 									.setTitle("Eliminar ROM")
-									.setMessage("¿Deseas eliminar el archivo ZIP y su carpeta descomprimida?")
+									.setMessage("¿Deseas eliminar todos los archivos y carpetas que coincidan con este juego?")
 									.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int which) {
-											// Eliminar carpeta con el mismo nombre
-											String baseName = file.getName().replaceFirst("[.][^.]+$", ""); // sin extensión
-											File romFolder = new File(file.getParentFile(), baseName);
-											if (romFolder.exists()) {
-												deleteRecursive(romFolder);
+											final String baseName = juego.getNombre().replaceFirst("[.][^.]+$", "");
+											final File parentDir = new File(Environment.getExternalStorageDirectory(),
+																			"retroplay/temp_download/" + juego.getSistema());
+
+											if (parentDir.exists()) {
+												File[] files = parentDir.listFiles();
+												if (files != null) {
+													for (File f : files) {
+														if (f.getName().contains(baseName)) {
+															if (f.isDirectory()) deleteRecursive(f);
+															else f.delete();
+														}
+													}
+												}
 											}
 
-											// Eliminar archivo ZIP
-											if (file.exists() && file.delete()) {
-												Toast.makeText(getApplicationContext(), "ROM eliminada", Toast.LENGTH_SHORT).show();
-												borrarRom.setVisibility(View.GONE);
-												actualizarListaDeJuegos(); // si quieres refrescar la lista
-											} else {
-												Toast.makeText(getApplicationContext(), "No se pudo eliminar el archivo ZIP", Toast.LENGTH_SHORT).show();
-											}
+											Toast.makeText(getApplicationContext(), "ROM eliminada", Toast.LENGTH_SHORT).show();
+											borrarRom.setVisibility(View.GONE);
+											actualizarListaDeJuegos();
 										}
 									})
 									.setNegativeButton("Cancelar", null)
@@ -1366,13 +1485,14 @@ public class MainActivity extends Activity
 					//screenshot.setVisibility(View.VISIBLE);
 
 					File screenFile = new File(Environment.getExternalStorageDirectory(),
-											   "retroplay/media/" + systemAlias + "/screenshots/" + romNameSE + ".webp");
+											  "retroplay/media/" + systemAlias + "/screenshots/" + romNameSE + ".webp");
 
 					FileInputStream fis = null;
 					try
 					{
 						fis = new FileInputStream(screenFile);
 						screenshot.setImageDrawable(Drawable.createFromStream(fis, null));
+						screenshot.setVisibility(View.VISIBLE);
 					}
 					catch (FileNotFoundException e)
 					{
@@ -1476,6 +1596,9 @@ public class MainActivity extends Activity
 						Juego juego = todos.get(j);
 						String baseName = juego.getNombre().replaceAll("\\.[^.]+$", "");
 						boolean descargado = archivosDescargados.contains(baseName);
+
+						// 🔴 AQUÍ FALTA ESTO
+						juego.setDescargado(descargado);
 
 						if (!mostrarSoloDescargados || descargado) {
 							filtrados.add(juego);
@@ -1866,9 +1989,16 @@ public class MainActivity extends Activity
 
 				case "DOWNLOAD_PROGRESS":    
 					int progress = intent.getIntExtra("progress", 0);    
+					String mbText = intent.getStringExtra("mbText"); // 🔹 aquí obtenemos MB descargados
+
 					lastProgress = progress;    
-					updateDownloadProgress(progress);    
-					break;    
+					updateDownloadProgress(progress); // mantiene la barra de porcentaje
+
+					// Actualiza el ProgressDialog con el texto MB
+					if (downloadProgressDialog != null && downloadProgressDialog.isShowing()) {
+						downloadProgressDialog.setMessage(mbText);
+					}
+					break;
 
 				case "DOWNLOAD_COMPLETE":    
 					isDownloading = false;    
@@ -1911,7 +2041,8 @@ public class MainActivity extends Activity
 			updateDownloadProgress(lastProgress);  
 		}  
 
-		actualizarEspacio();  
+		actualizarEspacio();
+		actualizarListaDeJuegos();
 
 		// evitar offset en roms
 		if (recyclerRoms != null && romListAdapter != null && romListAdapter.getItemCount() > 0)  
