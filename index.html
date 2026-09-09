@@ -390,10 +390,6 @@ body {
     padding: 0;
 }
 
-.carousel-item.active-focus {
-    /* Estado de foco para segundo click */
-}
-
 .emulator-image-wrapper {
     width: 100px;
     height: 100px;
@@ -1904,7 +1900,7 @@ const COLOR_THEMES = [
     { id: 'white', name: 'Blanco', color: '#dfe6e9' }
 ];
 
-// ===== SISTEMA A LISTA (mapeo para juegos reales) =====
+// ===== MAPEO SISTEMA → NOMBRE DE LISTA =====
 const SYSTEM_LIST_MAP = {
     'nintendo64': 'n64',
     'playstation': 'psx',
@@ -2379,7 +2375,6 @@ function processEmulators(rawData) {
             fondoPath: `${CONFIG.fondosPath}${item.system}.webp`,
             isRetroArch: isRetroArch,
             visible: isRetroArch,
-            // Mapeo a nombre de lista
             listaName: SYSTEM_LIST_MAP[item.system] || item.system
         };
     });
@@ -2587,22 +2582,69 @@ async function renderEmuladores() {
     });
 }
 
+// ===== OBTENER JUEGOS PARA UN SISTEMA (DESDE LISTAS REALES) =====
+function getGamesForSystem(systemId, listaName) {
+    // Buscar en las listas escaneadas
+    const systemKey = systemId.toLowerCase();
+    const listaKey = listaName || systemKey;
+    
+    // Primero buscar por nombre de lista exacto
+    for (const lista of listasData) {
+        const listaBase = lista.name.replace('.txt', '').toLowerCase();
+        if (listaBase === listaKey || listaBase === systemKey || lista.name.toLowerCase().includes(systemKey)) {
+            if (lista.gamesData && lista.gamesData.length > 0) {
+                return lista.gamesData.map(g => ({
+                    name: g.name,
+                    year: 'N/A',
+                    size: g.size || 'N/A',
+                    cover: null,
+                    system: g.system || systemKey,
+                    url: g.url || ''
+                }));
+            }
+        }
+    }
+    
+    // Si no hay listas, buscar por nombre del sistema en los nombres de lista
+    for (const lista of listasData) {
+        if (lista.gamesData && lista.gamesData.length > 0) {
+            // Si la lista contiene juegos que coinciden con el sistema
+            const hasSystemGame = lista.gamesData.some(g => 
+                g.system && g.system.toLowerCase() === systemKey
+            );
+            if (hasSystemGame || lista.name.toLowerCase().includes(systemKey)) {
+                return lista.gamesData.map(g => ({
+                    name: g.name,
+                    year: 'N/A',
+                    size: g.size || 'N/A',
+                    cover: null,
+                    system: g.system || systemKey,
+                    url: g.url || ''
+                }));
+            }
+        }
+    }
+    
+    // Si no hay listas, devolver array vacío
+    return [];
+}
+
 // ===== MOSTRAR LISTA DE JUEGOS =====
 function showGamesList(games, systemName) {
     gamesGrid.innerHTML = '';
-    currentSystemGames = games;
+    currentSystemGames = games || [];
     currentListaName = systemName || 'Juegos';
     
     gamesTitle.textContent = currentListaName;
-    gamesCount.textContent = `(${games.length})`;
+    gamesCount.textContent = `(${games ? games.length : 0})`;
     isGameViewOpen = true;
     
     if (!games || games.length === 0) {
         gamesGrid.innerHTML = `
             <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">
                 <iconify-icon icon="mdi:gamepad" width="48" height="48" style="display:block; margin:0 auto 12px; opacity:0.3;"></iconify-icon>
-                <p style="font-size:14px;">No hay juegos disponibles</p>
-                <p style="font-size:12px; opacity:0.5;">Selecciona una lista para ver los juegos</p>
+                <p style="font-size:14px;">No hay juegos disponibles para este sistema</p>
+                <p style="font-size:12px; opacity:0.5;">Asegúrate de tener una lista con el nombre del sistema</p>
             </div>
         `;
     }
@@ -2651,8 +2693,13 @@ function showGamesList(games, systemName) {
         // Click en la card para lanzar juego (si está descargado)
         card.addEventListener('click', (e) => {
             if (e.target.closest('.btn-game') || e.target.closest('.game-actions')) return;
-            showToast(`Cargando ${game.name}...`, 'mdi:play');
-            console.log('🎮 Lanzando juego:', game);
+            const playBtn = card.querySelector('.btn-game.play');
+            if (playBtn && !playBtn.classList.contains('disabled')) {
+                showToast(`Lanzando ${game.name}...`, 'mdi:play');
+                console.log('🎮 Lanzando juego:', game);
+            } else {
+                showToast(`Descarga primero ${game.name}`, 'mdi:download');
+            }
         });
         
         // Click en botón descargar
@@ -2665,13 +2712,15 @@ function showGamesList(games, systemName) {
                 // Marcar como descargado (simulación)
                 downloadBtn.classList.remove('download');
                 downloadBtn.classList.add('play');
-                downloadBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Jugar`;
+                downloadBtn.innerHTML = `<iconify-icon icon="mdi:check" width="14" height="14"></iconify-icon> Descargado`;
                 const playBtn = card.querySelector('.btn-game.play');
                 if (playBtn) {
                     playBtn.classList.remove('disabled');
                     playBtn.classList.add('play');
                     playBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Jugar`;
                 }
+                // Guardar estado de descarga
+                game.downloaded = true;
             } else {
                 showToast('No hay enlace de descarga disponible', 'mdi:alert');
             }
@@ -2886,29 +2935,17 @@ function renderCarousel() {
         yearSpan.textContent = emu.year;
         item.appendChild(yearSpan);
         
-        // Segundo click (después del foco) para abrir juegos
-        let clickCount = 0;
-        let clickTimer = null;
+        // CLIC ÚNICO - Abrir juegos del sistema
         item.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount === 1) {
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                    setActiveEmulator(index);
-                }, 400);
-            } else if (clickCount >= 2) {
-                clearTimeout(clickTimer);
-                clickCount = 0;
-                // Segundo click - abrir juegos
-                const games = getGamesForSystem(emu.id, emu.listaName);
-                if (games && games.length > 0) {
-                    showGamesList(games, emu.name);
-                } else {
-                    showToast(`No hay juegos disponibles para ${emu.name}`, 'mdi:alert');
-                }
+            const games = getGamesForSystem(emu.id, emu.listaName);
+            if (games && games.length > 0) {
+                showGamesList(games, emu.name);
+            } else {
+                showToast(`No hay juegos disponibles para ${emu.name}`, 'mdi:alert');
             }
         });
         
+        // Tecla Enter para abrir juegos
         item.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -2924,49 +2961,6 @@ function renderCarousel() {
         track.appendChild(item);
     });
     updateCarouselPosition();
-}
-
-// ===== OBTENER JUEGOS PARA UN SISTEMA =====
-function getGamesForSystem(systemId, listaName) {
-    // Buscar en las listas escaneadas
-    const systemKey = systemId.toLowerCase();
-    const listaKey = listaName || systemKey;
-    
-    // Buscar lista que coincida con el sistema
-    for (const lista of listasData) {
-        const listaBase = lista.name.replace('.txt', '').toLowerCase();
-        if (listaBase === listaKey || listaBase === systemKey || lista.name.toLowerCase().includes(systemKey)) {
-            if (lista.gamesData && lista.gamesData.length > 0) {
-                return lista.gamesData.map(g => ({
-                    name: g.name,
-                    year: 'N/A',
-                    size: g.size || 'N/A',
-                    cover: null,
-                    system: g.system || systemKey,
-                    url: g.url || ''
-                }));
-            }
-        }
-    }
-    
-    // Si no hay listas, usar datos de ejemplo
-    const exampleGames = {
-        'nintendo64': [
-            { name: 'Super Mario 64', year: '1996', size: '8 MB', system: 'nintendo64', url: '' },
-            { name: 'The Legend of Zelda: OoT', year: '1998', size: '32 MB', system: 'nintendo64', url: '' },
-            { name: 'GoldenEye 007', year: '1997', size: '12 MB', system: 'nintendo64', url: '' }
-        ],
-        'playstation': [
-            { name: 'Final Fantasy VII', year: '1997', size: '1.3 GB', system: 'playstation', url: '' },
-            { name: 'Metal Gear Solid', year: '1998', size: '700 MB', system: 'playstation', url: '' }
-        ],
-        'snes': [
-            { name: 'Chrono Trigger', year: '1995', size: '4 MB', system: 'snes', url: '' },
-            { name: 'Super Metroid', year: '1994', size: '3 MB', system: 'snes', url: '' }
-        ]
-    };
-    
-    return exampleGames[systemId] || exampleGames['nintendo64'] || [];
 }
 
 function renderIndicators() {
@@ -3357,7 +3351,7 @@ document.addEventListener('mouseup', (e) => {
 
 // ===== INIT =====
 async function init() {
-    console.log('🚀 RetroPlay - Con juegos reales y modal de edición');
+    console.log('🚀 RetroPlay - Juegos reales desde listas');
     
     try {
         const rawData = await loadSystemConfig();
@@ -3381,8 +3375,8 @@ async function init() {
         
         console.log(`✅ ${emulators.length} sistemas (${filteredEmulators.length} visibles)`);
         console.log(`📦 ${emuladoresData.length} emuladores disponibles`);
-        console.log('📋 Listas cargadas:', listasData.length);
-        console.log('🎮 Segundo click en sistema → lista de juegos');
+        console.log(`📋 ${listasData.length} listas de juegos cargadas`);
+        console.log('🎮 Clic en sistema → abre sus juegos reales');
         console.log('🖱️ Click largo en juego → modal de edición');
         
     } catch (error) {
