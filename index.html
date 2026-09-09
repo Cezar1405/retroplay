@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>RetroPlay</title>
+    
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+<style>
+/* ===== RESET & VARIABLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --bg-card-hover: rgba(255, 255, 255, 0.08);
+    --text-primary: #f0f0f5;
+    --text-secondary: #8888a0;
+    --text-muted: #5a5a6e;
+    --accent: #6c5ce7;
+    --accent-light: #a29bfe;
+    --accent-dark: #4a3db8;
+    --accent-glow: rgba(108, 92, 231, 0.25);
+    --focus-glow: rgba(108, 92, 231, 0.4);
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-smooth: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* ===== FOCUS VISIBLE ===== */
+*:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+.carousel-item:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 4px;
+    box-shadow: 0 0 30px var(--focus-glow);
+}
+
+/* ===== MENU BUTTON ===== */
+.menu-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 9;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.menu-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+    color: var(--text-primary);
+    transform: scale(1.05);
+}
+
+.menu-btn:active {
+    transform: scale(0.92);
+}
+
+.menu-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ===== STATUS WIDGET ===== */
+.status-widget {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,.3);
+    border-radius: 24px;
+    padding: 6px 14px 6px 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.status-widget .status-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-widget .status-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--glass-border);
+}
+
+.status-widget .clock {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    min-width: 55px;
+    text-align: center;
+}
+
+.status-widget .clock .seconds {
+    font-size: 9px;
+    opacity: 0.4;
+    font-weight: 400;
+}
+
+.status-widget .battery {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-widget .battery .percentage {
+    font-size: 10px;
+    font-weight: 500;
+    min-width: 28px;
+    text-align: right;
+}
+
+.status-widget .battery .battery-icon {
+    transition: color 0.3s ease;
+}
+
+.status-widget .battery .battery-icon.low { color: #e74c3c; }
+.status-widget .battery .battery-icon.medium { color: #f39c12; }
+.status-widget .battery .battery-icon.high { color: #2ecc71; }
+.status-widget .battery .battery-icon.charging {
+    color: #2ecc71;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.status-widget .connection .signal-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 14px;
+}
+
+.status-widget .connection .signal-bars .bar {
+    width: 3px;
+    background: var(--text-muted);
+    border-radius: 1px;
+    transition: background 0.3s ease;
+}
+
+.status-widget .connection .signal-bars .bar.active {
+    background: var(--accent-light);
+}
+
+.status-widget .connection .signal-bars .bar:nth-child(1) { height: 4px; }
+.status-widget .connection .signal-bars .bar:nth-child(2) { height: 7px; }
+.status-widget .connection .signal-bars .bar:nth-child(3) { height: 10px; }
+.status-widget .connection .signal-bars .bar:nth-child(4) { height: 13px; }
+
+.status-widget .connection .signal-bars .bar.inactive {
+    opacity: 0.2;
+}
+
+.status-widget .connection .network-type {
+    font-size: 9px;
+    font-weight: 500;
+    opacity: 0.6;
+    min-width: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== FONDO DE LA VISTA HOME ===== */
+.view-home {
+    position: relative;
+    overflow: hidden;
+}
+
+.view-home .view-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.view-home .view-bg.has-image {
+    opacity: 1;
+    border-radius: 0;
+    transform: scale(1);
+}
+
+.view-home .view-bg.active {
+    opacity: 0.7;
+    transform: scale(1);
+}
+
+.view-home .view-bg.has-image.active {
+    opacity: 0.9;
+    transform: scale(1);
+}
+
+/* ===== SLIDER SECTION ===== */
+.slider-section {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow: visible;
+}
+
+/* ===== DEGRADADO INFERIOR ===== */
+.slider-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, rgba(10, 10, 15, 0.9) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== FOOTER ===== */
+.home-footer {
+    position: absolute;
+    font-size: 15px;
+    bottom: 20px;
+    right: 24px;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.home-footer:hover {
+    opacity: 0.8;
+}
+
+.home-footer .footer-icon {
+    color: var(--text-muted);
+}
+
+.home-footer .footer-text {
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+}
+
+/* ===== INDICADORES ===== */
+.indicators-top {
+    display: none;
+    justify-content: center;
+    gap: 6px;
+    z-index: 2;
+    padding: 8px 0 12px;
+    flex-shrink: 0;
+}
+
+.indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: all var(--transition);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+}
+
+.indicator:hover {
+    background: var(--text-secondary);
+    transform: scale(1.2);
+}
+
+.indicator.active {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.indicator:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ===== CARRUSEL ===== */
+.carousel-container {
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+    padding:0;
+    width:100%;
+    flex-shrink: 0;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 15px;
+    transition: transform var(--transition-smooth);
+    padding: 0 10px;
+    will-change: transform;
+    align-items: center;
+}
+
+.carousel-item {
+    flex: 0 0 140px;
+    height: 120px;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+}
+
+.carousel-item.dbl-click {
+    animation: dblClickPulse 0.3s ease;
+}
+
+@keyframes dblClickPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.emulator-image-wrapper {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    background: transparent !important;
+}
+
+.emulator-logo-bg {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.emulator-logo-bg.no-logo {
+    background: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    max-width: 100px;
+    word-wrap: break-word;
+}
+
+.carousel-item .emulator-name,
+.carousel-item .emulator-year {
+    display: none;
+}
+
+.carousel-item.active .emulator-logo-bg {
+    animation: float 1s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: scale(1.6) translateY(0px); }
+    50% { transform: scale(1.6) translateY(-6px); }
+}
+
+/* ===== INFO CARD ===== */
+.info-card {
+    position: relative;
+    z-index: 2;
+    max-width:600px;
+    padding: 0px 20px;
+    margin-top: 0;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    transition: all 0.5s ease;
+    flex-shrink: 0;
+    animation: slideUp 0.6s ease-out;
+    cursor: default;
+}
+
+.info-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.info-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 2px;
+}
+
+.system-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    transition: all 0.3s;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.system-year {
+    font-size: 10px;
+    color: var(--text-primary);
+    opacity: .6;
+    font-weight: 500;
+    background: var(--bg-card);
+    padding: 0 10px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    flex-shrink: 0;
+}
+
+.system-desc {
+    font-size: 10px;
+    color: var(--text-primary);
+    opacity: .6;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.system-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.tag {
+    font-size: 8px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.system-core {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+}
+
+.core-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.core-value {
+    color: var(--accent-light);
+    font-weight: 600;
+    background: rgba(108, 92, 231, 0.15);
+    padding: 1px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(108, 92, 231, 0.2);
+}
+
+.controller-container {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+}
+
+.controller-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controller-icon {
+    color: var(--text-primary);
+    filter: drop-shadow(0 4px 20px rgba(108, 92, 231, 0.2));
+    transition: all 0.5s ease;
+}
+
+/* ===== VISTAS (Home / Settings / Games) ===== */
+.view {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.view.active {
+    display: flex;
+}
+
+/* ===== VIEW: GAMES ===== */
+.view-games {
+    background: var(--bg-primary);
+    padding: 0 16px 30px;
+    overflow-y: auto;
+}
+
+.view-games .games-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 10;
+}
+
+.view-games .games-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.view-games .games-header h2 .game-count {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.view-games .games-back {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.view-games .games-back:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+/* ===== GAMES GRID ===== */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 16px 0;
+}
+
+.game-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: all var(--transition);
+    cursor: pointer;
+    position: relative;
+}
+
+.game-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.game-card .game-cover-wrapper {
+    width: 100%;
+    aspect-ratio: 1/1.2;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card .game-cover-wrapper .game-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all var(--transition);
+}
+
+.game-card .game-cover-wrapper .game-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    gap: 6px;
+}
+
+.game-card .game-cover-wrapper .game-fallback iconify-icon {
+    opacity: 0.3;
+}
+
+.game-card .game-cover-wrapper .game-fallback span {
+    font-size: 10px;
+    opacity: 0.4;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 8px;
+    word-break: break-all;
+}
+
+.game-card .game-info {
+    padding: 10px 12px 12px;
+}
+
+.game-card .game-info .game-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-card .game-info .game-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.game-card .game-info .game-meta .game-system {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.game-card .game-info .game-meta .game-size {
+    font-family: monospace;
+}
+
+/* ===== SETTINGS VIEW ===== */
+.view-settings {
+    background: var(--bg-primary);
+    padding: 0 20px 30px;
+    overflow-y: auto;
+}
+
+.view-settings .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0 16px;
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 10;
+}
+
+.view-settings .settings-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.view-settings .settings-back {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.view-settings .settings-back:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+/* ===== ACORDEONES ===== */
+.accordion {
+    margin-bottom: 16px;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+}
+
+.accordion-header:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+}
+
+.accordion-header .accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.accordion-header .accordion-icon {
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+}
+
+.accordion-header.open .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 0 4px;
+}
+
+.accordion-body.open {
+    max-height: 800px;
+    padding: 12px 4px;
+}
+
+/* ===== CHECKBOX LIST ===== */
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.checkbox-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.checkbox-list::-webkit-scrollbar-track {
+    background: var(--bg-card);
+    border-radius: 4px;
+}
+
+.checkbox-list::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.checkbox-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+}
+
+.checkbox-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-muted);
+    border-radius: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.checkbox-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.checkbox-item input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.checkbox-item .checkbox-label {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.checkbox-item .checkbox-badge {
+    font-size: 10px;
+    color: var(--text-muted);
+    background: var(--glass-bg);
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.checkbox-item .checkbox-status {
+    font-size: 10px;
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+/* ===== COLOR THEMES ===== */
+.color-themes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.color-theme-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    background: var(--bg-card);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.color-theme-btn:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+}
+
+.color-theme-btn.active {
+    border-color: var(--accent);
+    background: rgba(108, 92, 231, 0.1);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.color-theme-btn .color-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all var(--transition);
+}
+
+.color-theme-btn .color-preview .check {
+    opacity: 0;
+    transition: all var(--transition);
+}
+
+.color-theme-btn.active .color-preview .check {
+    opacity: 1;
+}
+
+.color-theme-btn .color-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.color-theme-btn.active .color-name {
+    color: var(--text-secondary);
+}
+
+/* ===== EMULADORES LIST ===== */
+.emulator-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.emulator-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    gap: 8px;
+}
+
+.emulator-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+}
+
+.emulator-item .emulator-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.emulator-item .emulator-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.emulator-item .emulator-info .emulator-icon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.emulator-item .emulator-info .emulator-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.emulator-item .emulator-info .emulator-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.emulator-item .emulator-info .emulator-name .status-badge {
+    font-size: 9px;
+    padding: 1px 8px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.emulator-item .emulator-info .emulator-name .status-badge.installed {
+    background: #2ecc71;
+}
+
+.emulator-item .emulator-info .emulator-name .status-badge.not-installed {
+    background: var(--text-muted);
+}
+
+.emulator-item .emulator-info .emulator-name .version-tag {
+    font-size: 9px;
+    color: var(--accent-light);
+    font-weight: 400;
+}
+
+.emulator-item .emulator-info .emulator-pkg {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: 0.5;
+    font-family: monospace;
+}
+
+.emulator-item .emulator-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.btn-action {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 16px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    min-height: 28px;
+}
+
+.btn-action:hover {
+    transform: scale(1.05);
+}
+
+.btn-action:active {
+    transform: scale(0.95);
+}
+
+.btn-action.open {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-action.open:hover {
+    background: var(--accent-dark);
+}
+
+.btn-action.download {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-action.download:hover {
+    background: var(--accent-dark);
+}
+
+.btn-action.uninstall {
+    background: var(--bg-card);
+    color: var(--text-muted);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-action.uninstall:hover {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.btn-action.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ===== LISTAS DE JUEGOS ===== */
+.listas-config {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.listas-config .folder-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.listas-config .folder-selector input[type="file"] {
+    display: none;
+}
+
+.listas-config .folder-selector .btn-folder {
+    padding: 10px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.listas-config .folder-selector .btn-folder:hover {
+    background: var(--accent-dark);
+    transform: scale(1.02);
+}
+
+.listas-config .folder-selector .btn-folder:active {
+    transform: scale(0.98);
+}
+
+.listas-config .folder-path {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 8px 4px;
+    word-break: break-all;
+    font-family: monospace;
+    opacity: 0.6;
+}
+
+.listas-config .folder-path .path-label {
+    opacity: 0.4;
+}
+
+.listas-config .lista-info {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 4px;
+}
+
+.listas-config .lista-info .count {
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+.listas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 4px 2px;
+}
+
+.listas-grid .lista-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+    cursor: pointer;
+}
+
+.listas-grid .lista-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+}
+
+.listas-grid .lista-item .lista-name {
+    flex: 1;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.listas-grid .lista-item .lista-games {
+    font-size: 10px;
+    color: var(--accent-light);
+    font-weight: 500;
+}
+
+/* ===== BOTÓN GUARDAR ===== */
+.settings-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    padding-bottom: 20px;
+}
+
+.btn-save {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-save:hover {
+    background: var(--accent-dark);
+    transform: scale(1.02);
+}
+
+.btn-save:active {
+    transform: scale(0.98);
+}
+
+.btn-save:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.btn-reset {
+    padding: 12px 20px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    background: var(--glass-bg);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-reset:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+.btn-reset:active {
+    transform: scale(0.98);
+}
+
+/* ===== TOAST ===== */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bg-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 24px;
+    color: var(--text-primary);
+    font-size: 14px;
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast iconify-icon {
+    margin-right: 8px;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes dblClickPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ===== ESTADO DE CARGA ===== */
+.app-container.loading .carousel-item,
+.app-container.loading .info-card {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.app-container.loading::after {
+    content: 'Cargando...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 100;
+    background: var(--bg-card);
+    padding: 16px 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 380px) {
+    .carousel-item {
+        flex: 0 0 116px;
+        height: 150px;
+    }
+    .emulator-image-wrapper {
+        width: 44px;
+        height: 44px;
+    }
+    .system-title { font-size: 15px; }
+    .controller-container {
+        width: 60px;
+        height: 60px;
+    }
+    .controller-icon {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    .color-themes {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .status-widget {
+        padding: 4px 10px 4px 12px;
+        font-size: 10px;
+        gap: 8px;
+    }
+    .status-widget .clock {
+        font-size: 11px;
+        min-width: 45px;
+    }
+    .status-widget .battery .percentage {
+        font-size: 9px;
+        min-width: 22px;
+    }
+    .emulator-item .emulator-top {
+        flex-wrap: wrap;
+    }
+    .emulator-item .emulator-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .emulator-item .emulator-info .emulator-name {
+        font-size: 12px;
+    }
+    .games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+}
+
+@media (min-width: 431px) {
+    .app-container {
+        border-left: 1px solid var(--glass-border);
+        border-right: 1px solid var(--glass-border);
+    }
+}
+</style>
+</head>
+<body>
+    <div class="app-container" role="application" aria-label="RetroPlay">
+        <!-- ===== MENU BUTTON ===== -->
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir ajustes">
+            <iconify-icon icon="mdi:cog" width="24" height="24"></iconify-icon>
+        </button>
+
+        <!-- ===== STATUS WIDGET ===== -->
+        <div class="status-widget" id="statusWidget">
+            <div class="status-item">
+                <span class="clock" id="clockDisplay">00:00 <span class="seconds">00</span></span>
+            </div>
+            <div class="status-divider"></div>
+            <div class="status-item connection">
+                <div class="signal-bars" id="signalBars">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <span class="network-type" id="networkType">
+                    <iconify-icon icon="mdi:wifi" width="12" height="12"></iconify-icon>
+                </span>
+            </div>
+            <div class="status-divider"></div>
+            <div class="status-item battery">
+                <iconify-icon icon="mdi:battery-50" width="18" height="18" class="battery-icon" id="batteryIcon"></iconify-icon>
+                <span class="percentage" id="batteryPercentage">50%</span>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: HOME ===== -->
+        <div class="view view-home active" id="viewHome">
+            <div class="view-bg" id="viewBg"></div>
+            
+            <section class="slider-section" aria-label="Selector de sistemas">
+                <div class="indicators-top" id="indicatorsTop" role="tablist"></div>
+                <div class="carousel-container">
+                    <div class="carousel-track" id="carouselTrack" role="list"></div>
+                </div>
+                <div class="info-card" id="infoCard" role="region">
+                    <div class="info-content">
+                        <div class="info-header">
+                            <h2 class="system-title" id="systemTitle">Nintendo 64</h2>
+                            <span class="system-year" id="systemYear">1996</span>
+                        </div>
+                        <p class="system-desc" id="systemDesc">La primera consola de 64 bits de Nintendo.</p>
+                        <div class="system-tags" id="systemTags"></div>
+                        <div class="system-core">
+                            <span class="core-label">Core:</span>
+                            <span class="core-value" id="systemCore">Mupen64Plus</span>
+                        </div>
+                    </div>
+                    <div class="controller-container">
+                        <div class="controller-wrapper">
+                            <iconify-icon icon="mdi:gamepad-variant" width="72" height="72" class="controller-icon" id="controllerIcon" aria-hidden="true"></iconify-icon>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER ===== -->
+            <div class="home-footer">
+                <iconify-icon icon="mdi:gamepad-variant" width="20" height="20" class="footer-icon"></iconify-icon>
+                <span class="footer-text">RetroPlay</span>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: GAMES ===== -->
+        <div class="view view-games" id="viewGames">
+            <div class="games-header">
+                <h2 id="gamesTitle">Juegos <span class="game-count" id="gamesCount"></span></h2>
+                <button class="games-back" id="gamesBack" aria-label="Volver">
+                    <iconify-icon icon="mdi:arrow-left" width="20" height="20"></iconify-icon>
+                </button>
+            </div>
+            <div class="games-grid" id="gamesGrid"></div>
+        </div>
+
+        <!-- ===== VIEW: SETTINGS ===== -->
+        <div class="view view-settings" id="viewSettings">
+            <div class="settings-header">
+                <h2>Ajustes</h2>
+                <button class="settings-back" id="settingsBack" aria-label="Volver">
+                    <iconify-icon icon="mdi:arrow-left" width="20" height="20"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- ACORDEÓN: Sistemas -->
+            <div class="accordion" id="accordionSystems">
+                <div class="accordion-header open" onclick="toggleAccordion('accordionSystems')">
+                    <span class="accordion-title">
+                        <iconify-icon icon="mdi:gamepad-variant" width="18" height="18"></iconify-icon>
+                        Sistemas
+                        <span style="font-size:10px; font-weight:400; opacity:0.5; margin-left:6px;">★ RetroArch</span>
+                    </span>
+                    <iconify-icon icon="mdi:chevron-down" width="20" height="20" class="accordion-icon"></iconify-icon>
+                </div>
+                <div class="accordion-body open" id="accordionSystemsBody">
+                    <div class="checkbox-list" id="systemsList"></div>
+                </div>
+            </div>
+
+            <!-- ACORDEÓN: Temas -->
+            <div class="accordion" id="accordionThemes">
+                <div class="accordion-header" onclick="toggleAccordion('accordionThemes')">
+                    <span class="accordion-title">
+                        <iconify-icon icon="mdi:palette" width="18" height="18"></iconify-icon>
+                        Temas de Color
+                    </span>
+                    <iconify-icon icon="mdi:chevron-down" width="20" height="20" class="accordion-icon"></iconify-icon>
+                </div>
+                <div class="accordion-body" id="accordionThemesBody">
+                    <div class="color-themes" id="colorThemes"></div>
+                </div>
+            </div>
+
+            <!-- ACORDEÓN: Emuladores -->
+            <div class="accordion" id="accordionEmulators">
+                <div class="accordion-header" onclick="toggleAccordion('accordionEmulators')">
+                    <span class="accordion-title">
+                        <iconify-icon icon="mdi:application" width="18" height="18"></iconify-icon>
+                        Emuladores
+                        <span style="font-size:9px; font-weight:400; opacity:0.5; margin-left:6px;" id="emulatorCount">0</span>
+                    </span>
+                    <iconify-icon icon="mdi:chevron-down" width="20" height="20" class="accordion-icon"></iconify-icon>
+                </div>
+                <div class="accordion-body" id="accordionEmulatorsBody">
+                    <div class="emulator-list" id="emulatorList">
+                        <!-- Generado por JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACORDEÓN: Listas de Juegos -->
+            <div class="accordion" id="accordionListas">
+                <div class="accordion-header" onclick="toggleAccordion('accordionListas')">
+                    <span class="accordion-title">
+                        <iconify-icon icon="mdi:folder-open" width="18" height="18"></iconify-icon>
+                        Listas de Juegos
+                    </span>
+                    <iconify-icon icon="mdi:chevron-down" width="20" height="20" class="accordion-icon"></iconify-icon>
+                </div>
+                <div class="accordion-body" id="accordionListasBody">
+                    <div class="listas-config">
+                        <div class="folder-selector">
+                            <input type="file" id="folderInput" webkitdirectory directory multiple />
+                            <button class="btn-folder" id="btnSelectFolder">
+                                <iconify-icon icon="mdi:folder-open" width="18" height="18"></iconify-icon>
+                                Seleccionar Carpeta
+                            </button>
+                            <button class="btn-folder" id="btnScanListas" style="background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--glass-border);">
+                                <iconify-icon icon="mdi:refresh" width="18" height="18"></iconify-icon>
+                                Escanear
+                            </button>
+                        </div>
+                        <div class="folder-path" id="folderPathDisplay">
+                            <span class="path-label">📁 </span><span id="folderPathText">Ninguna carpeta seleccionada</span>
+                        </div>
+                        <div class="lista-info" id="listaInfo">
+                            <span class="count" id="listaCount">0</span> archivos de lista encontrados
+                        </div>
+                        <div class="listas-grid" id="listasGrid">
+                            <!-- Generado por JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="settings-actions">
+                <button class="btn-save" id="saveSettingsBtn">
+                    <iconify-icon icon="mdi:content-save" width="18" height="18"></iconify-icon>
+                    Guardar
+                </button>
+                <button class="btn-reset" id="resetSettingsBtn">
+                    <iconify-icon icon="mdi:refresh" width="18" height="18"></iconify-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+    </div>
+
+<script>
+// ===== CONFIGURACIÓN =====
+const CONFIG = {
+    jsonPath: 'assets/sistemas/system_config.json',
+    emuladoresPath: 'assets/emuladores.json',
+    assetsPath: 'assets/sistemas/',
+    fondosPath: 'assets/fondos/',
+    defaultIcon: 'mdi:gamepad-variant',
+    listasPath: '/storage/emulated/0/retroplay/listas/'
+};
+
+// ===== SISTEMAS RETROARCH COMPATIBLES =====
+const RETROARCH_CORES = [
+    'nintendo64', 'playstation', 'snes', 'sega', 'gameboy', 
+    'nes', 'genesis', 'gba', 'psp', 'dreamcast', 'neogeo'
+];
+
+// ===== TEMAS DE COLOR =====
+const COLOR_THEMES = [
+    { id: 'purple', name: 'Púrpura', color: '#6c5ce7' },
+    { id: 'blue', name: 'Azul', color: '#3498db' },
+    { id: 'green', name: 'Verde', color: '#2ecc71' },
+    { id: 'red', name: 'Rojo', color: '#e74c3c' },
+    { id: 'orange', name: 'Naranja', color: '#e67e22' },
+    { id: 'pink', name: 'Rosa', color: '#e84393' },
+    { id: 'cyan', name: 'Cian', color: '#00b894' },
+    { id: 'white', name: 'Blanco', color: '#dfe6e9' }
+];
+
+// ===== JUEGOS DE EJEMPLO POR SISTEMA =====
+const GAMES_BY_SYSTEM = {
+    'nintendo64': [
+        { name: 'Super Mario 64', year: '1996', size: '8 MB', cover: null },
+        { name: 'The Legend of Zelda: Ocarina of Time', year: '1998', size: '32 MB', cover: null },
+        { name: 'GoldenEye 007', year: '1997', size: '12 MB', cover: null },
+        { name: 'Mario Kart 64', year: '1996', size: '12 MB', cover: null },
+        { name: 'Super Smash Bros.', year: '1999', size: '16 MB', cover: null }
+    ],
+    'playstation': [
+        { name: 'Final Fantasy VII', year: '1997', size: '1.3 GB', cover: null },
+        { name: 'Metal Gear Solid', year: '1998', size: '700 MB', cover: null },
+        { name: 'Castlevania: Symphony of the Night', year: '1997', size: '500 MB', cover: null }
+    ],
+    'snes': [
+        { name: 'Chrono Trigger', year: '1995', size: '4 MB', cover: null },
+        { name: 'Super Metroid', year: '1994', size: '3 MB', cover: null },
+        { name: 'The Legend of Zelda: A Link to the Past', year: '1991', size: '1.5 MB', cover: null }
+    ]
+};
+
+// ===== ESTADO =====
+let emulators = [];
+let filteredEmulators = [];
+let currentIndex = 0;
+let isDragging = false;
+let startX = 0;
+let isGamepadConnected = false;
+let currentTheme = 'purple';
+let settingsOpen = false;
+let hasUnsavedChanges = false;
+let emuladoresData = [];
+let listasData = [];
+let selectedFolder = null;
+let currentSystemGames = [];
+
+// ===== DOM REFS =====
+const viewHome = document.getElementById('viewHome');
+const viewSettings = document.getElementById('viewSettings');
+const viewGames = document.getElementById('viewGames');
+const track = document.getElementById('carouselTrack');
+const indicatorsTop = document.getElementById('indicatorsTop');
+const viewBg = document.getElementById('viewBg');
+const systemTitle = document.getElementById('systemTitle');
+const systemYear = document.getElementById('systemYear');
+const systemDesc = document.getElementById('systemDesc');
+const systemTags = document.getElementById('systemTags');
+const systemCore = document.getElementById('systemCore');
+const controllerIcon = document.getElementById('controllerIcon');
+const settingsBack = document.getElementById('settingsBack');
+const gamesBack = document.getElementById('gamesBack');
+const menuBtn = document.getElementById('menuBtn');
+const systemsList = document.getElementById('systemsList');
+const colorThemes = document.getElementById('colorThemes');
+const emulatorList = document.getElementById('emulatorList');
+const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+const toast = document.getElementById('toast');
+const folderInput = document.getElementById('folderInput');
+const btnSelectFolder = document.getElementById('btnSelectFolder');
+const btnScanListas = document.getElementById('btnScanListas');
+const listasGrid = document.getElementById('listasGrid');
+const listaCount = document.getElementById('listaCount');
+const emulatorCount = document.getElementById('emulatorCount');
+const folderPathText = document.getElementById('folderPathText');
+const gamesTitle = document.getElementById('gamesTitle');
+const gamesCount = document.getElementById('gamesCount');
+const gamesGrid = document.getElementById('gamesGrid');
+
+// ===== STATUS WIDGET DOM REFS =====
+const clockDisplay = document.getElementById('clockDisplay');
+const signalBars = document.getElementById('signalBars');
+const networkType = document.getElementById('networkType');
+const batteryIcon = document.getElementById('batteryIcon');
+const batteryPercentage = document.getElementById('batteryPercentage');
+
+// ===== DATOS DE RESPALDO =====
+const FALLBACK_DATA = [
+    { system: "nintendo64", nombre: "Nintendo 64", descripcion: "La primera consola de 64 bits de Nintendo.", coreDef: "Mupen64Plus", coreOpciones: ["Mupen64Plus"] },
+    { system: "playstation", nombre: "PlayStation", descripcion: "La consola que llevó los juegos en CD a los hogares.", coreDef: "DuckStation", coreOpciones: ["DuckStation"] },
+    { system: "snes", nombre: "Super Nintendo", descripcion: "La era dorada de los RPGs y plataformas.", coreDef: "Snes9x", coreOpciones: ["Snes9x"] },
+    { system: "sega", nombre: "Sega Genesis", descripcion: "El rival de Nintendo. Velocidad y actitud.", coreDef: "Genesis Plus GX", coreOpciones: ["Genesis Plus GX"] },
+    { system: "gameboy", nombre: "Game Boy", descripcion: "La portátil que cambió los juegos para siempre.", coreDef: "Gambatte", coreOpciones: ["Gambatte"] }
+];
+
+// ===== TOAST =====
+function showToast(message, icon = 'mdi:check-circle') {
+    toast.innerHTML = `<iconify-icon icon="${icon}" width="20" height="20"></iconify-icon> ${message}`;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ===== EMULADOR MANAGER =====
+class EmulatorManager {
+    constructor() {
+        this.cache = new Map();
+        this.simulation = true;
+        this.simulatedInstalled = [
+            'com.dsemu.drastic',
+            'com.retroarch',
+            'org.ppsspp.ppsspp',
+            'com.github.uoyouchen.eightynine',
+            'com.mame4droid',
+            'com.epsxe',
+            'com.fpse',
+            'com.mupen64plusae'
+        ];
+        this.simulatedVersions = {
+            'com.dsemu.drastic': '2.5.1',
+            'com.retroarch': '1.16.0',
+            'org.ppsspp.ppsspp': '1.17.1',
+            'com.github.uoyouchen.eightynine': '2.1.0',
+            'com.mame4droid': '1.0.0',
+            'com.epsxe': '1.0.0',
+            'com.fpse': '1.0.0',
+            'com.mupen64plusae': '1.0.0'
+        };
+    }
+
+    async isInstalled(packageName) {
+        if (this.cache.has(packageName)) return this.cache.get(packageName);
+        let installed = false;
+        if (window.AndroidBridge && typeof window.AndroidBridge.isAppInstalled === 'function') {
+            try { installed = await window.AndroidBridge.isAppInstalled(packageName); } catch (e) {}
+        }
+        if (!installed && this.simulation) {
+            installed = this.simulatedInstalled.includes(packageName);
+        }
+        this.cache.set(packageName, installed);
+        setTimeout(() => this.cache.delete(packageName), 300000);
+        return installed;
+    }
+
+    async getVersion(packageName) {
+        let version = null;
+        if (window.AndroidBridge && typeof window.AndroidBridge.getAppVersion === 'function') {
+            try { version = await window.AndroidBridge.getAppVersion(packageName); } catch (e) {}
+        }
+        if (!version && this.simulation) {
+            version = this.simulatedVersions[packageName] || null;
+        }
+        return version;
+    }
+
+    async launch(packageName, activity) {
+        let launched = false;
+        if (window.AndroidBridge && typeof window.AndroidBridge.launchApp === 'function') {
+            try { launched = await window.AndroidBridge.launchApp(packageName, activity); } catch (e) {}
+        }
+        if (!launched) {
+            try {
+                const activityPath = activity || `${packageName}.MainActivity`;
+                const intentUrl = `intent://${activityPath}#Intent;package=${packageName};end`;
+                window.location.href = intentUrl;
+                launched = true;
+            } catch (e) {}
+        }
+        return launched;
+    }
+
+    async uninstall(packageName) {
+        let uninstalled = false;
+        if (window.AndroidBridge && typeof window.AndroidBridge.uninstallApp === 'function') {
+            try {
+                uninstalled = await window.AndroidBridge.uninstallApp(packageName);
+                if (uninstalled) this.cache.delete(packageName);
+            } catch (e) {}
+        }
+        if (!uninstalled) {
+            const intentUrl = `intent://#Intent;action=android.settings.APPLICATION_DETAILS_SETTINGS;data=package:${packageName};end`;
+            window.location.href = intentUrl;
+            uninstalled = true;
+        }
+        return uninstalled;
+    }
+}
+
+const emulatorManager = new EmulatorManager();
+
+// ===== CARGA DE DATOS =====
+async function loadSystemConfig() {
+    console.log('🔍 Cargando sistemas...');
+    try {
+        const response = await fetch(CONFIG.jsonPath);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!Array.isArray(data) || data.length === 0) throw new Error('JSON vacío');
+        console.log(`✅ ${data.length} sistemas cargados`);
+        return data;
+    } catch (error) {
+        console.warn('⚠️ Usando datos de respaldo:', error.message);
+        return FALLBACK_DATA;
+    }
+}
+
+async function loadEmuladores() {
+    console.log('🔍 Cargando emuladores...');
+    try {
+        const response = await fetch(CONFIG.emuladoresPath);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!Array.isArray(data) || data.length === 0) throw new Error('JSON vacío');
+        console.log(`✅ ${data.length} emuladores cargados`);
+        return data;
+    } catch (error) {
+        console.warn('⚠️ Error cargando emuladores:', error.message);
+        return [];
+    }
+}
+
+// ===== SELECCIONAR CARPETA =====
+function selectFolder() {
+    folderInput.click();
+}
+
+folderInput.addEventListener('change', async function(e) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    // Obtener la carpeta seleccionada
+    const firstFile = files[0];
+    const path = firstFile.webkitRelativePath || firstFile.name;
+    const folderName = path.split('/')[0];
+    
+    folderPathText.textContent = folderName;
+    selectedFolder = folderName;
+    
+    showToast(`Carpeta seleccionada: ${folderName}`, 'mdi:folder-open');
+    
+    // Procesar archivos .txt
+    const txtFiles = [];
+    for (const file of files) {
+        if (file.name.endsWith('.txt') && file.webkitRelativePath) {
+            txtFiles.push(file);
+        }
+    }
+    
+    if (txtFiles.length === 0) {
+        showToast('No se encontraron archivos .txt en la carpeta', 'mdi:alert');
+        listasData = [];
+        renderListas();
+        return;
+    }
+    
+    // Leer archivos .txt
+    const results = [];
+    for (const file of txtFiles) {
+        try {
+            const text = await file.text();
+            const lines = text.split('\n').filter(line => line.trim());
+            const games = lines.map(line => {
+                const parts = line.split('=');
+                return {
+                    name: parts[0] || 'Desconocido',
+                    url: parts[1] || '',
+                    system: parts[2] || 'desconocido',
+                    size: parts[3] || 'N/A'
+                };
+            });
+            
+            results.push({
+                name: file.name,
+                games: games.length,
+                gamesData: games,
+                size: `${(file.size / 1024).toFixed(1)} KB`
+            });
+        } catch (error) {
+            console.error('Error leyendo archivo:', file.name, error);
+        }
+    }
+    
+    listasData = results;
+    renderListas();
+    
+    // Guardar en localStorage
+    localStorage.setItem('retroplay-folder', folderName);
+    localStorage.setItem('retroplay-listas', JSON.stringify(results));
+    
+    showToast(`Encontrados ${results.length} archivos de lista`, 'mdi:check-circle');
+});
+
+// ===== ESCANEAR LISTAS GUARDADAS =====
+function scanListas() {
+    const saved = localStorage.getItem('retroplay-listas');
+    const folder = localStorage.getItem('retroplay-folder');
+    
+    if (saved && folder) {
+        try {
+            listasData = JSON.parse(saved);
+            folderPathText.textContent = folder;
+            renderListas();
+            showToast(`Listas cargadas desde ${folder}`, 'mdi:folder-open');
+            return;
+        } catch (e) {}
+    }
+    
+    // Si no hay guardado, usar datos de ejemplo
+    const exampleData = [
+        { name: 'cps1.txt', games: 18, gamesData: [], size: '2.4 KB' },
+        { name: 'cps2.txt', games: 25, gamesData: [], size: '3.1 KB' },
+        { name: 'n64.txt', games: 12, gamesData: [], size: '1.8 KB' },
+        { name: 'psx.txt', games: 30, gamesData: [], size: '4.2 KB' },
+        { name: 'snes.txt', games: 45, gamesData: [], size: '5.6 KB' }
+    ];
+    listasData = exampleData;
+    renderListas();
+    showToast('Datos de ejemplo cargados', 'mdi:information');
+}
+
+function renderListas() {
+    listasGrid.innerHTML = '';
+    if (!listasData || listasData.length === 0) {
+        listasGrid.innerHTML = `
+            <div style="text-align:center; padding:12px; color:var(--text-muted); font-size:12px;">
+                No hay listas disponibles. Selecciona una carpeta con archivos .txt
+            </div>
+        `;
+        listaCount.textContent = '0';
+        return;
+    }
+    
+    listaCount.textContent = listasData.length;
+    
+    listasData.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'lista-item';
+        item.innerHTML = `
+            <iconify-icon icon="mdi:file-document" width="16" height="16" style="color:var(--text-muted);"></iconify-icon>
+            <span class="lista-name">${file.name}</span>
+            <span class="lista-games">${file.games} juegos</span>
+        `;
+        item.addEventListener('click', () => {
+            if (file.gamesData && file.gamesData.length > 0) {
+                const games = file.gamesData.map(g => ({
+                    name: g.name,
+                    year: 'N/A',
+                    size: g.size || 'N/A',
+                    cover: null,
+                    system: g.system || 'desconocido'
+                }));
+                showGamesList(games, file.name.replace('.txt', ''));
+            } else {
+                showToast(`Cargando juegos de ${file.name}...`, 'mdi:file-document');
+            }
+        });
+        listasGrid.appendChild(item);
+    });
+}
+
+// ===== MAPEO DE ICONOS =====
+function getIconForSystem(system) {
+    const map = {
+        'psvita': 'mdi:sony-playstation',
+        'windows': 'mdi:microsoft-windows',
+        'mugen': 'mdi:gamepad-variant',
+        'nintendo64': 'mdi:nintendo-game-boy',
+        'playstation': 'mdi:sony-playstation',
+        'snes': 'mdi:nintendo-switch',
+        'sega': 'mdi:sega',
+        'gameboy': 'mdi:nintendo-game-boy',
+        'nes': 'mdi:nintendo-game-boy',
+        'genesis': 'mdi:sega',
+        'gba': 'mdi:nintendo-game-boy',
+        'psp': 'mdi:sony-playstation',
+        'dreamcast': 'mdi:sega',
+        'neogeo': 'mdi:gamepad-variant'
+    };
+    return map[system] || CONFIG.defaultIcon;
+}
+
+function getControllerIconForSystem(system) {
+    const map = {
+        'psvita': 'mdi:gamepad-variant',
+        'windows': 'mdi:keyboard',
+        'mugen': 'mdi:gamepad-round',
+        'nintendo64': 'mdi:gamepad-square',
+        'playstation': 'mdi:gamepad',
+        'snes': 'mdi:gamepad-square',
+        'sega': 'mdi:gamepad-round',
+        'gameboy': 'mdi:gamepad-variant',
+        'nes': 'mdi:gamepad-variant',
+        'genesis': 'mdi:gamepad-round',
+        'gba': 'mdi:gamepad-variant',
+        'psp': 'mdi:gamepad-variant',
+        'dreamcast': 'mdi:gamepad-round',
+        'neogeo': 'mdi:gamepad-variant'
+    };
+    return map[system] || CONFIG.defaultIcon;
+}
+
+// ===== EXTRACCIÓN DE TAGS =====
+function extractTags(description) {
+    const tags = [];
+    const keywords = {
+        '3D': ['3D', 'tridimensional', 'polígonos'],
+        '2D': ['2D', 'bidimensional', 'sprites'],
+        'Portátil': ['portátil', 'handheld', 'móvil'],
+        'CD': ['CD', 'disco', 'óptico'],
+        'Arcade': ['arcade', 'recreativa'],
+        'Clásico': ['clásico', 'retro', 'legendario'],
+        'RPG': ['RPG', 'role', 'aventura'],
+        'Lucha': ['lucha', 'fighting', 'pelea']
+    };
+    
+    const descLower = description.toLowerCase();
+    for (const [tag, words] of Object.entries(keywords)) {
+        if (words.some(w => descLower.includes(w.toLowerCase()))) {
+            tags.push(tag);
+        }
+    }
+    
+    if (tags.length === 0) {
+        tags.push('Retro');
+        if (descLower.includes('videojuego') || descLower.includes('juego')) {
+            tags.push('Videojuego');
+        }
+    }
+    return tags.slice(0, 4);
+}
+
+// ===== COLORES POR SISTEMA =====
+function getSystemColors(system) {
+    const map = {
+        'psvita': { bg: 'linear-gradient(135deg, #0f0f1a, #1a1a2e, #2d1b3d)', accent: '#8e44ad' },
+        'windows': { bg: 'linear-gradient(135deg, #0a0a1a, #1a1a2e, #2a2a3e)', accent: '#3498db' },
+        'mugen': { bg: 'linear-gradient(135deg, #1a0a0a, #2d1b1b, #3d1a1a)', accent: '#e74c3c' },
+        'nintendo64': { bg: 'linear-gradient(135deg, #0f0f1a, #1a1a2e, #16213e)', accent: '#6c5ce7' },
+        'playstation': { bg: 'linear-gradient(135deg, #1a0a0a, #2d1b1b, #3d1a1a)', accent: '#e74c3c' },
+        'snes': { bg: 'linear-gradient(135deg, #1a1a0a, #2d2b1b, #3d3a1a)', accent: '#f1c40f' },
+        'sega': { bg: 'linear-gradient(135deg, #0a0a1a, #1a1a2d, #1a1a3d)', accent: '#3498db' },
+        'gameboy': { bg: 'linear-gradient(135deg, #0a1a0a, #1a2d1a, #1a3d1a)', accent: '#2ecc71' },
+        'nes': { bg: 'linear-gradient(135deg, #0a0a0a, #1a1a1a, #2a2a2a)', accent: '#e74c3c' },
+        'genesis': { bg: 'linear-gradient(135deg, #0a0a1a, #1a1a2d, #1a1a3d)', accent: '#3498db' },
+        'gba': { bg: 'linear-gradient(135deg, #0a1a0a, #1a2d1a, #1a3d1a)', accent: '#2ecc71' },
+        'psp': { bg: 'linear-gradient(135deg, #0f0f1a, #1a1a2e, #2d1b3d)', accent: '#8e44ad' },
+        'dreamcast': { bg: 'linear-gradient(135deg, #0a0a1a, #1a1a2d, #1a1a3d)', accent: '#3498db' },
+        'neogeo': { bg: 'linear-gradient(135deg, #1a0a0a, #2d1b1b, #3d1a1a)', accent: '#e74c3c' }
+    };
+    return map[system] || { bg: 'linear-gradient(135deg, #0a0a0f, #1a1a1a, #2a2a2a)', accent: '#6c5ce7' };
+}
+
+// ===== APLICAR TEMA =====
+function applyTheme(themeId) {
+    const theme = COLOR_THEMES.find(t => t.id === themeId);
+    if (!theme) return;
+    
+    currentTheme = themeId;
+    document.documentElement.style.setProperty('--accent', theme.color);
+    document.documentElement.style.setProperty('--accent-light', theme.color + 'aa');
+    document.documentElement.style.setProperty('--accent-dark', theme.color + '88');
+    document.documentElement.style.setProperty('--accent-glow', theme.color + '40');
+    document.documentElement.style.setProperty('--focus-glow', theme.color + '66');
+    
+    document.querySelectorAll('.indicator.active').forEach(dot => {
+        dot.style.background = theme.color;
+    });
+}
+
+// ===== PROCESAR EMULADORES =====
+function processEmulators(rawData) {
+    const processed = rawData.map(item => {
+        const yearMatch = item.descripcion.match(/\b(19[8-9][0-9]|20[0-2][0-9])\b/);
+        const colors = getSystemColors(item.system);
+        const isRetroArch = RETROARCH_CORES.includes(item.system);
+        return {
+            id: item.system,
+            name: item.nombre,
+            icon: getIconForSystem(item.system),
+            iconController: getControllerIconForSystem(item.system),
+            year: yearMatch ? yearMatch[0] : 'N/A',
+            description: item.descripcion,
+            coreDef: item.coreDef || 'Desconocido',
+            coreOpciones: item.coreOpciones || [item.coreDef || 'Desconocido'],
+            tags: extractTags(item.descripcion),
+            bgColor: colors.bg,
+            accentColor: colors.accent,
+            imagePath: `${CONFIG.assetsPath}${item.system}.webp`,
+            fondoPath: `${CONFIG.fondosPath}${item.system}.webp`,
+            isRetroArch: isRetroArch,
+            visible: isRetroArch
+        };
+    });
+    
+    return processed.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// ===== RENDER SISTEMAS EN AJUSTES =====
+function renderSystemsList() {
+    systemsList.innerHTML = '';
+    emulators.forEach((emu, index) => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-item';
+        
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = emu.visible !== false;
+        input.dataset.index = index;
+        
+        const span = document.createElement('span');
+        span.className = 'checkbox-label';
+        span.textContent = emu.name;
+        
+        const badge = document.createElement('span');
+        badge.className = 'checkbox-badge';
+        badge.textContent = emu.year;
+        
+        if (emu.isRetroArch) {
+            const status = document.createElement('span');
+            status.className = 'checkbox-status';
+            status.textContent = '★';
+            status.title = 'Compatible con RetroArch';
+            label.appendChild(status);
+        }
+        
+        input.addEventListener('change', (e) => {
+            emu.visible = e.target.checked;
+            hasUnsavedChanges = true;
+        });
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        label.appendChild(badge);
+        systemsList.appendChild(label);
+    });
+}
+
+// ===== RENDER TEMAS DE COLOR =====
+function renderColorThemes() {
+    colorThemes.innerHTML = '';
+    COLOR_THEMES.forEach(theme => {
+        const btn = document.createElement('button');
+        btn.className = `color-theme-btn ${theme.id === currentTheme ? 'active' : ''}`;
+        btn.dataset.theme = theme.id;
+        
+        const preview = document.createElement('div');
+        preview.className = 'color-preview';
+        preview.style.background = theme.color;
+        preview.innerHTML = `<iconify-icon icon="mdi:check" width="16" height="16" class="check" style="color:white;"></iconify-icon>`;
+        
+        const name = document.createElement('span');
+        name.className = 'color-name';
+        name.textContent = theme.name;
+        
+        btn.appendChild(preview);
+        btn.appendChild(name);
+        
+        btn.addEventListener('click', () => {
+            applyTheme(theme.id);
+            renderColorThemes();
+            hasUnsavedChanges = true;
+        });
+        
+        colorThemes.appendChild(btn);
+    });
+}
+
+// ===== RENDER EMULADORES =====
+async function renderEmuladores() {
+    emulatorList.innerHTML = '';
+    
+    if (!emuladoresData || emuladoresData.length === 0) {
+        emulatorList.innerHTML = `
+            <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px;">
+                <iconify-icon icon="mdi:information" width="24" height="24" style="display:block; margin:0 auto 8px; opacity:0.3;"></iconify-icon>
+                No hay emuladores disponibles
+            </div>
+        `;
+        emulatorCount.textContent = '0';
+        return;
+    }
+
+    emulatorCount.textContent = emuladoresData.length;
+
+    emulatorList.innerHTML = `
+        <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px;">
+            <iconify-icon icon="mdi:loading" width="24" height="24" style="display:block; margin:0 auto 8px; animation: spin 1s linear infinite;"></iconify-icon>
+            Verificando emuladores...
+        </div>
+    `;
+
+    const results = [];
+    for (const emu of emuladoresData) {
+        const installed = await emulatorManager.isInstalled(emu.pkg);
+        const version = installed ? await emulatorManager.getVersion(emu.pkg) : null;
+        results.push({ ...emu, installed, version });
+    }
+
+    emulatorList.innerHTML = '';
+    results.forEach(emu => {
+        const item = document.createElement('div');
+        item.className = 'emulator-item';
+        
+        const top = document.createElement('div');
+        top.className = 'emulator-top';
+        
+        const info = document.createElement('div');
+        info.className = 'emulator-info';
+        
+        const icon = document.createElement('span');
+        icon.className = 'emulator-icon';
+        icon.innerHTML = `<iconify-icon icon="mdi:application" width="20" height="20"></iconify-icon>`;
+        
+        const details = document.createElement('div');
+        details.className = 'emulator-details';
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'emulator-name';
+        nameDiv.innerHTML = `
+            ${emu.nombre}
+            ${emu.installed ? 
+                `<span class="status-badge installed">✓ Instalado</span>` : 
+                `<span class="status-badge not-installed">No instalado</span>`
+            }
+            ${emu.installed && emu.version ? `<span class="version-tag">v${emu.version}</span>` : ''}
+        `;
+        
+        const pkgDiv = document.createElement('div');
+        pkgDiv.className = 'emulator-pkg';
+        pkgDiv.textContent = emu.pkg || '';
+        
+        details.appendChild(nameDiv);
+        details.appendChild(pkgDiv);
+        
+        info.appendChild(icon);
+        info.appendChild(details);
+        
+        const actions = document.createElement('div');
+        actions.className = 'emulator-actions';
+        
+        if (emu.installed) {
+            const openBtn = document.createElement('button');
+            openBtn.className = 'btn-action open';
+            openBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Abrir`;
+            openBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                openBtn.classList.add('loading');
+                const launched = await emulatorManager.launch(emu.pkg, emu.atv);
+                openBtn.classList.remove('loading');
+                if (launched) {
+                    showToast(`Abriendo ${emu.nombre}...`, 'mdi:play');
+                } else {
+                    showToast('No se pudo abrir el emulador', 'mdi:alert');
+                }
+            });
+            actions.appendChild(openBtn);
+            
+            const uninstallBtn = document.createElement('button');
+            uninstallBtn.className = 'btn-action uninstall';
+            uninstallBtn.innerHTML = `<iconify-icon icon="mdi:delete" width="14" height="14"></iconify-icon>`;
+            uninstallBtn.title = 'Desinstalar';
+            uninstallBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (confirm(`¿Desinstalar ${emu.nombre}?`)) {
+                    uninstallBtn.classList.add('loading');
+                    const uninstalled = await emulatorManager.uninstall(emu.pkg);
+                    uninstallBtn.classList.remove('loading');
+                    if (uninstalled) {
+                        showToast(`Desinstalando ${emu.nombre}...`, 'mdi:delete');
+                        renderEmuladores();
+                    }
+                }
+            });
+            actions.appendChild(uninstallBtn);
+        } else {
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn-action download';
+            downloadBtn.innerHTML = `<iconify-icon icon="mdi:download" width="14" height="14"></iconify-icon> Descargar`;
+            downloadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (emu.url) {
+                    window.open(emu.url, '_blank');
+                    showToast(`Descargando ${emu.nombre}...`, 'mdi:download');
+                } else {
+                    showToast('No hay enlace de descarga disponible', 'mdi:alert');
+                }
+            });
+            actions.appendChild(downloadBtn);
+        }
+        
+        top.appendChild(info);
+        top.appendChild(actions);
+        item.appendChild(top);
+        emulatorList.appendChild(item);
+    });
+}
+
+// ===== MOSTRAR LISTA DE JUEGOS =====
+function showGamesList(games, systemName) {
+    gamesGrid.innerHTML = '';
+    currentSystemGames = games;
+    
+    gamesTitle.textContent = systemName || 'Juegos';
+    gamesCount.textContent = `(${games.length})`;
+    
+    if (!games || games.length === 0) {
+        gamesGrid.innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">
+                <iconify-icon icon="mdi:gamepad" width="48" height="48" style="display:block; margin:0 auto 12px; opacity:0.3;"></iconify-icon>
+                <p style="font-size:14px;">No hay juegos disponibles</p>
+                <p style="font-size:12px; opacity:0.5;">Selecciona una lista para ver los juegos</p>
+            </div>
+        `;
+    }
+    
+    games.forEach((game, index) => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.style.animationDelay = `${index * 0.05}s`;
+        
+        const coverWrapper = document.createElement('div');
+        coverWrapper.className = 'game-cover-wrapper';
+        
+        if (game.cover) {
+            const img = document.createElement('img');
+            img.className = 'game-cover';
+            img.src = game.cover;
+            img.alt = game.name;
+            img.loading = 'lazy';
+            img.onerror = function() {
+                this.style.display = 'none';
+                const fallback = coverWrapper.querySelector('.game-fallback');
+                if (fallback) fallback.style.display = 'flex';
+            };
+            coverWrapper.appendChild(img);
+        }
+        
+        const fallback = document.createElement('div');
+        fallback.className = 'game-fallback';
+        fallback.innerHTML = `
+            <iconify-icon icon="mdi:gamepad-variant" width="32" height="32"></iconify-icon>
+            <span>${game.name.substring(0, 3).toUpperCase()}</span>
+        `;
+        if (game.cover) {
+            fallback.style.display = 'none';
+        }
+        coverWrapper.appendChild(fallback);
+        
+        const info = document.createElement('div');
+        info.className = 'game-info';
+        info.innerHTML = `
+            <div class="game-name">${game.name}</div>
+            <div class="game-meta">
+                <span class="game-system">${game.system || 'Retro'}</span>
+                <span>•</span>
+                <span class="game-size">${game.size || 'N/A'}</span>
+                ${game.year && game.year !== 'N/A' ? `<span>• ${game.year}</span>` : ''}
+            </div>
+        `;
+        
+        card.appendChild(coverWrapper);
+        card.appendChild(info);
+        
+        card.addEventListener('click', () => {
+            showToast(`Lanzando ${game.name}...`, 'mdi:play');
+            console.log('🎮 Lanzando juego:', game);
+        });
+        
+        gamesGrid.appendChild(card);
+    });
+    
+    // Cambiar a la vista de juegos
+    viewHome.classList.remove('active');
+    viewSettings.classList.remove('active');
+    viewGames.classList.add('active');
+}
+
+// ===== VOLVER A HOME DESDE JUEGOS =====
+function goHomeFromGames() {
+    viewGames.classList.remove('active');
+    viewHome.classList.add('active');
+}
+
+// ===== ACORDEONES =====
+function toggleAccordion(id) {
+    const header = document.querySelector(`#${id} .accordion-header`);
+    const body = document.querySelector(`#${id} .accordion-body`);
+    
+    if (!header || !body) return;
+    
+    header.classList.toggle('open');
+    body.classList.toggle('open');
+}
+
+// ===== FILTRAR Y RENDERIZAR =====
+function filterAndRender() {
+    filteredEmulators = emulators.filter(emu => emu.visible !== false);
+    
+    if (filteredEmulators.length === 0) {
+        track.innerHTML = `
+            <div style="width:100%; text-align:center; padding:40px 0; color:var(--text-muted);">
+                <iconify-icon icon="mdi:information" width="48" height="48" style="display:block; margin:0 auto 12px; opacity:0.3;"></iconify-icon>
+                <p style="font-size:14px;">No hay sistemas visibles</p>
+                <p style="font-size:12px; opacity:0.5;">Activa al menos un sistema en Ajustes</p>
+            </div>
+        `;
+        indicatorsTop.innerHTML = '';
+        document.getElementById('infoCard').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('infoCard').style.display = 'flex';
+    if (currentIndex >= filteredEmulators.length) currentIndex = 0;
+    
+    renderCarousel();
+    renderIndicators();
+    updateInfoCard();
+    updateCarouselPosition();
+}
+
+// ===== RENDER CARRUSEL =====
+function renderCarousel() {
+    track.innerHTML = '';
+    filteredEmulators.forEach((emu, index) => {
+        const item = document.createElement('div');
+        item.className = `carousel-item ${index === currentIndex ? 'active' : ''}`;
+        item.dataset.index = index;
+        item.tabIndex = 0;
+        item.setAttribute('role', 'listitem');
+        item.setAttribute('aria-label', emu.name);
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'emulator-image-wrapper';
+        
+        const logoDiv = document.createElement('div');
+        logoDiv.className = 'emulator-logo-bg';
+        
+        const img = new Image();
+        img.onload = function() {
+            logoDiv.style.backgroundImage = `url(${emu.imagePath})`;
+            logoDiv.classList.remove('no-logo');
+        };
+        img.onerror = function() {
+            logoDiv.classList.add('no-logo');
+            logoDiv.textContent = emu.name;
+        };
+        img.src = emu.imagePath;
+        
+        if (img.complete && img.naturalWidth > 0) {
+            logoDiv.style.backgroundImage = `url(${emu.imagePath})`;
+            logoDiv.classList.remove('no-logo');
+        } else if (img.complete && img.naturalWidth === 0) {
+            logoDiv.classList.add('no-logo');
+            logoDiv.textContent = emu.name;
+        }
+        
+        wrapper.appendChild(logoDiv);
+        item.appendChild(wrapper);
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'emulator-name';
+        nameSpan.textContent = emu.name;
+        item.appendChild(nameSpan);
+        
+        const yearSpan = document.createElement('span');
+        yearSpan.className = 'emulator-year';
+        yearSpan.textContent = emu.year;
+        item.appendChild(yearSpan);
+        
+        // Doble clic para abrir juegos
+        let clickTimer = null;
+        item.addEventListener('click', () => {
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                // Doble clic
+                const systemId = emu.id;
+                const games = GAMES_BY_SYSTEM[systemId] || GAMES_BY_SYSTEM['nintendo64'] || [];
+                showGamesList(games, emu.name);
+            } else {
+                clickTimer = setTimeout(() => {
+                    clickTimer = null;
+                    setActiveEmulator(index);
+                }, 300);
+            }
+        });
+        
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const systemId = emu.id;
+                const games = GAMES_BY_SYSTEM[systemId] || GAMES_BY_SYSTEM['nintendo64'] || [];
+                showGamesList(games, emu.name);
+            }
+        });
+        
+        track.appendChild(item);
+    });
+    updateCarouselPosition();
+}
+
+function renderIndicators() {
+    indicatorsTop.innerHTML = '';
+    filteredEmulators.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = `indicator ${index === currentIndex ? 'active' : ''}`;
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Sistema ${index + 1}`);
+        dot.addEventListener('click', () => setActiveEmulator(index));
+        dot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setActiveEmulator(index);
+            }
+        });
+        indicatorsTop.appendChild(dot);
+    });
+}
+
+function updateInfoCard() {
+    if (filteredEmulators.length === 0) return;
+    const emu = filteredEmulators[currentIndex];
+    systemTitle.textContent = emu.name;
+    systemYear.textContent = emu.year;
+    systemDesc.textContent = emu.description;
+    systemCore.textContent = emu.coreDef;
+    controllerIcon.setAttribute('icon', emu.iconController);
+    
+    systemTags.innerHTML = emu.tags.map(tag => 
+        `<span class="tag">${tag}</span>`
+    ).join('');
+    
+    const bgImg = new Image();
+    bgImg.onload = function() {
+        viewBg.style.backgroundImage = `url(${emu.fondoPath})`;
+        viewBg.classList.add('has-image');
+    };
+    bgImg.onerror = function() {
+        viewBg.style.backgroundImage = 'none';
+        viewBg.classList.remove('has-image');
+        viewBg.style.background = emu.bgColor;
+    };
+    bgImg.src = emu.fondoPath;
+    
+    viewBg.classList.add('active');
+    setTimeout(() => viewBg.classList.remove('active'), 800);
+}
+
+function updateCarouselPosition() {
+    const items = document.querySelectorAll('.carousel-item');
+    if (!items.length) return;
+    
+    const containerWidth = document.querySelector('.carousel-container')?.offsetWidth || 400;
+    const itemWidth = 156;
+    const offset = (containerWidth / 2) - (itemWidth / 2) - (currentIndex * itemWidth);
+    const maxOffset = containerWidth - (items.length * itemWidth) - 20;
+    const finalOffset = Math.min(Math.max(offset, maxOffset), 20);
+    
+    track.style.transform = `translateX(${finalOffset}px)`;
+    
+    items.forEach((item, index) => {
+        item.classList.toggle('active', index === currentIndex);
+    });
+    
+    const theme = COLOR_THEMES.find(t => t.id === currentTheme);
+    document.querySelectorAll('.indicator').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+        if (index === currentIndex && filteredEmulators[currentIndex]) {
+            dot.style.background = theme ? theme.color : filteredEmulators[currentIndex].accentColor;
+        }
+    });
+}
+
+function setActiveEmulator(index) {
+    if (filteredEmulators.length === 0) return;
+    if (index < 0) index = filteredEmulators.length - 1;
+    if (index >= filteredEmulators.length) index = 0;
+    currentIndex = index;
+    updateCarouselPosition();
+    updateInfoCard();
+}
+
+// ===== GUARDAR CONFIGURACIÓN =====
+function saveSettings() {
+    const settings = {
+        theme: currentTheme,
+        systems: emulators.map(emu => ({
+            id: emu.id,
+            visible: emu.visible !== false
+        }))
+    };
+    localStorage.setItem('retroplay-settings', JSON.stringify(settings));
+    hasUnsavedChanges = false;
+    showToast('Configuración guardada', 'mdi:check-circle');
+    console.log('💾 Configuración guardada:', settings);
+}
+
+function loadSettings() {
+    try {
+        const saved = localStorage.getItem('retroplay-settings');
+        if (saved) {
+            const settings = JSON.parse(saved);
+            if (settings.theme) applyTheme(settings.theme);
+            if (settings.systems) {
+                settings.systems.forEach(savedEmu => {
+                    const emu = emulators.find(e => e.id === savedEmu.id);
+                    if (emu) emu.visible = savedEmu.visible;
+                });
+            }
+            console.log('📂 Preferencias cargadas');
+            return true;
+        }
+    } catch (e) {
+        console.warn('⚠️ Error cargando preferencias:', e);
+    }
+    return false;
+}
+
+function resetSettings() {
+    emulators.forEach(emu => emu.visible = emu.isRetroArch);
+    applyTheme('purple');
+    hasUnsavedChanges = true;
+    renderSystemsList();
+    renderColorThemes();
+    filterAndRender();
+    showToast('Preferencias restablecidas', 'mdi:refresh');
+}
+
+// ===== NAVEGACIÓN ENTRE VISTAS =====
+function showHome() {
+    viewHome.classList.add('active');
+    viewSettings.classList.remove('active');
+    viewGames.classList.remove('active');
+    settingsOpen = false;
+}
+
+function showSettings() {
+    viewHome.classList.remove('active');
+    viewSettings.classList.add('active');
+    viewGames.classList.remove('active');
+    settingsOpen = true;
+    renderSystemsList();
+    renderColorThemes();
+    renderEmuladores();
+    hasUnsavedChanges = false;
+}
+
+// ===== STATUS WIDGET =====
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    clockDisplay.innerHTML = `${hours}:${minutes} <span class="seconds">${seconds}</span>`;
+}
+
+function updateBattery() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+            const level = Math.round(battery.level * 100);
+            const charging = battery.charging;
+            
+            batteryPercentage.textContent = `${level}%`;
+            
+            let iconName = 'mdi:battery-';
+            if (charging) iconName += 'charging-';
+            
+            if (level >= 90) iconName += '90';
+            else if (level >= 80) iconName += '80';
+            else if (level >= 60) iconName += '60';
+            else if (level >= 50) iconName += '50';
+            else if (level >= 40) iconName += '40';
+            else if (level >= 30) iconName += '30';
+            else if (level >= 20) iconName += '20';
+            else if (level >= 10) iconName += '10';
+            else iconName += 'outline';
+            
+            if (charging) iconName += '-outline';
+            
+            batteryIcon.setAttribute('icon', iconName);
+            batteryIcon.className = `battery-icon ${charging ? 'charging' : (level <= 15 ? 'low' : level <= 30 ? 'medium' : 'high')}`;
+        }).catch(() => {
+            batteryPercentage.textContent = '--%';
+        });
+    } else {
+        batteryPercentage.textContent = '--%';
+    }
+}
+
+function updateConnection() {
+    if ('connection' in navigator) {
+        const conn = navigator.connection;
+        if (conn) {
+            const type = conn.effectiveType || 'unknown';
+            
+            if (type === 'wifi' || type === 'ethernet') {
+                networkType.innerHTML = `<iconify-icon icon="mdi:wifi" width="12" height="12"></iconify-icon>`;
+            } else if (type === 'cellular' || type === '4g' || type === '3g' || type === '2g') {
+                networkType.innerHTML = `<iconify-icon icon="mdi:signal-cellular-3" width="12" height="12"></iconify-icon>`;
+            } else {
+                networkType.innerHTML = `<iconify-icon icon="mdi:lan-disconnect" width="12" height="12"></iconify-icon>`;
+            }
+            
+            const bars = signalBars.querySelectorAll('.bar');
+            const speeds = { 'slow-2g': 1, '2g': 1, '3g': 2, '4g': 3, 'wifi': 4, 'ethernet': 4 };
+            const activeBars = speeds[type] || 2;
+            bars.forEach((bar, i) => {
+                bar.classList.toggle('active', i < activeBars);
+                bar.classList.toggle('inactive', i >= activeBars);
+            });
+        }
+    } else {
+        networkType.innerHTML = `<iconify-icon icon="mdi:wifi" width="12" height="12"></iconify-icon>`;
+        signalBars.querySelectorAll('.bar').forEach((bar, i) => {
+            bar.classList.toggle('active', i < 3);
+            bar.classList.toggle('inactive', i >= 3);
+        });
+    }
+}
+
+function initStatusWidget() {
+    updateClock();
+    updateBattery();
+    updateConnection();
+    setInterval(updateClock, 1000);
+    setInterval(updateBattery, 30000);
+    if ('connection' in navigator) {
+        navigator.connection?.addEventListener('change', updateConnection);
+    }
+}
+
+// ===== NAVEGACIÓN =====
+menuBtn?.addEventListener('click', showSettings);
+settingsBack?.addEventListener('click', showHome);
+gamesBack?.addEventListener('click', goHomeFromGames);
+btnSelectFolder?.addEventListener('click', selectFolder);
+btnScanListas?.addEventListener('click', scanListas);
+
+saveSettingsBtn?.addEventListener('click', () => {
+    saveSettings();
+    filterAndRender();
+});
+
+resetSettingsBtn?.addEventListener('click', () => {
+    if (confirm('¿Restablecer todas las preferencias a los valores predeterminados?')) {
+        resetSettings();
+    }
+});
+
+// ===== KEYBOARD =====
+document.addEventListener('keydown', (e) => {
+    if (settingsOpen) {
+        if (e.key === 'Escape') showHome();
+        if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            saveSettings();
+            filterAndRender();
+        }
+        return;
+    }
+    
+    if (e.target.closest('input') || e.target.closest('textarea')) return;
+    
+    const activeElement = document.activeElement;
+    const isOnCarousel = activeElement?.closest('.carousel-item');
+    const isOnIndicator = activeElement?.closest('.indicator');
+    
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (isOnCarousel || isOnIndicator) setActiveEmulator(currentIndex - 1);
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (isOnCarousel || isOnIndicator) setActiveEmulator(currentIndex + 1);
+    } else if (e.key === 'Home') {
+        e.preventDefault();
+        setActiveEmulator(0);
+    } else if (e.key === 'End') {
+        e.preventDefault();
+        setActiveEmulator(filteredEmulators.length - 1);
+    }
+});
+
+// ===== GAMEPAD =====
+let gamepadIndex = null;
+
+function handleGamepad() {
+    if (settingsOpen) return;
+    const gamepads = navigator.getGamepads();
+    const gamepad = gamepads[gamepadIndex] || gamepads[0];
+    if (!gamepad) return;
+    
+    const axisThreshold = 0.5;
+    const leftStickX = gamepad.axes[0] || 0;
+    const rightStickX = gamepad.axes[2] || 0;
+    const dPadX = gamepad.buttons[14]?.pressed ? -1 : gamepad.buttons[15]?.pressed ? 1 : 0;
+    
+    let direction = 0;
+    if (dPadX !== 0) direction = dPadX;
+    else if (Math.abs(leftStickX) > axisThreshold) direction = leftStickX > 0 ? 1 : -1;
+    else if (Math.abs(rightStickX) > axisThreshold) direction = rightStickX > 0 ? 1 : -1;
+    
+    if (direction !== 0) {
+        const newIndex = currentIndex + direction;
+        if (newIndex >= 0 && newIndex < filteredEmulators.length && newIndex !== currentIndex) {
+            setActiveEmulator(newIndex);
+            setTimeout(() => {}, 300);
+        }
+    }
+}
+
+function initGamepad() {
+    window.addEventListener('gamepadconnected', (e) => {
+        gamepadIndex = e.gamepad.index;
+        console.log('🎮 Gamepad conectado:', e.gamepad.id);
+    });
+    window.addEventListener('gamepaddisconnected', () => {
+        console.log('🎮 Gamepad desconectado');
+    });
+    function gamepadLoop() {
+        if (navigator.getGamepads().some(g => g)) handleGamepad();
+        requestAnimationFrame(gamepadLoop);
+    }
+    gamepadLoop();
+}
+
+// ===== DRAG / SWIPE =====
+let touchStartX = 0;
+let isSwiping = false;
+
+track.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    isSwiping = false;
+}, { passive: true });
+
+track.addEventListener('touchmove', (e) => {
+    if (settingsOpen || !filteredEmulators.length) return;
+    if (!touchStartX) return;
+    const diffX = e.touches[0].clientX - touchStartX;
+    if (Math.abs(diffX) > 10) {
+        isSwiping = true;
+        e.preventDefault();
+    }
+}, { passive: false });
+
+track.addEventListener('touchend', (e) => {
+    if (!touchStartX || !isSwiping || !filteredEmulators.length) {
+        touchStartX = 0;
+        return;
+    }
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 50) {
+        setActiveEmulator(diff < 0 ? currentIndex + 1 : currentIndex - 1);
+    }
+    touchStartX = 0;
+    isSwiping = false;
+}, { passive: true });
+
+track.addEventListener('mousedown', (e) => {
+    if (settingsOpen || !filteredEmulators.length) return;
+    isDragging = true;
+    startX = e.clientX;
+    track.style.transition = 'none';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+});
+
+document.addEventListener('mouseup', (e) => {
+    if (!isDragging || !filteredEmulators.length) return;
+    isDragging = false;
+    track.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    const diff = e.clientX - startX;
+    if (Math.abs(diff) > 50) {
+        setActiveEmulator(diff < 0 ? currentIndex + 1 : currentIndex - 1);
+    } else {
+        updateCarouselPosition();
+    }
+});
+
+// ===== INIT =====
+async function init() {
+    console.log('🚀 RetroPlay - Con juegos y selector de carpetas');
+    
+    try {
+        const rawData = await loadSystemConfig();
+        emulators = processEmulators(rawData);
+        if (!emulators.length) throw new Error('No hay sistemas');
+        
+        emuladoresData = await loadEmuladores();
+        
+        const hasSaved = loadSettings();
+        if (!hasSaved) {
+            emulators.forEach(emu => emu.visible = emu.isRetroArch);
+        }
+        
+        // Cargar listas guardadas
+        scanListas();
+        
+        filterAndRender();
+        setTimeout(updateCarouselPosition, 300);
+        
+        if (navigator.getGamepads) initGamepad();
+        initStatusWidget();
+        
+        console.log(`✅ ${emulators.length} sistemas (${filteredEmulators.length} visibles)`);
+        console.log(`📦 ${emuladoresData.length} emuladores disponibles`);
+        console.log('🎮 Doble clic en un sistema para ver sus juegos');
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        const container = document.querySelector('.app-container');
+        if (container) {
+            container.innerHTML = `
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:30px;text-align:center;">
+                    <iconify-icon icon="mdi:alert-circle" width="64" height="64" style="color:#e74c3c;margin-bottom:20px;"></iconify-icon>
+                    <h2 style="color:#f0f0f5;font-size:20px;margin-bottom:12px;">Error al cargar los datos</h2>
+                    <p style="color:#8888a0;font-size:14px;max-width:300px;margin-bottom:20px;">${error.message}</p>
+                    <button onclick="location.reload()" style="padding:12px 40px;border-radius:12px;border:none;background:#6c5ce7;color:white;font-weight:600;cursor:pointer;">Reintentar</button>
+                </div>
+            `;
+        }
+    }
+}
+
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (filteredEmulators.length) updateCarouselPosition();
+    }, 200);
+});
+
+document.addEventListener('touchmove', (e) => {
+    const target = e.target;
+    if (target.closest('.app-container') && !target.closest('.view-settings') && !target.closest('.view-games')) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
