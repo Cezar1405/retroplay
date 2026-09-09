@@ -390,14 +390,8 @@ body {
     padding: 0;
 }
 
-.carousel-item.dbl-click {
-    animation: dblClickPulse 0.3s ease;
-}
-
-@keyframes dblClickPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+.carousel-item.active-focus {
+    /* Estado de foco para segundo click */
 }
 
 .emulator-image-wrapper {
@@ -707,7 +701,7 @@ body {
 }
 
 .game-card .game-cover-wrapper .game-fallback iconify-icon {
-    opacity: 0.3;
+    opacity: 0.4;
 }
 
 .game-card .game-cover-wrapper .game-fallback span {
@@ -739,16 +733,210 @@ body {
     font-size: 10px;
     color: var(--text-muted);
     opacity: 0.6;
+    flex-wrap: wrap;
 }
 
-.game-card .game-info .game-meta .game-system {
+.game-card .game-info .game-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.game-card .game-info .game-actions .btn-game {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 14px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.game-card .game-info .game-meta .game-size {
-    font-family: monospace;
+.game-card .game-info .game-actions .btn-game.download {
+    background: var(--accent);
+    color: white;
+}
+
+.game-card .game-info .game-actions .btn-game.download:hover {
+    background: var(--accent-dark);
+    transform: scale(1.05);
+}
+
+.game-card .game-info .game-actions .btn-game.play {
+    background: #2ecc71;
+    color: white;
+}
+
+.game-card .game-info .game-actions .btn-game.play:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+.game-card .game-info .game-actions .btn-game.disabled {
+    background: var(--bg-card);
+    color: var(--text-muted);
+    border: 1px solid var(--glass-border);
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ===== MODAL DE EDICIÓN ===== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    max-width: 400px;
+    width: 100%;
+    padding: 24px;
+    animation: slideUp 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-content .modal-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-content .modal-header .modal-close {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.modal-content .modal-header .modal-close:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+.modal-content .modal-field {
+    margin-bottom: 12px;
+}
+
+.modal-content .modal-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-content .modal-field input,
+.modal-content .modal-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: inherit;
+    transition: all var(--transition);
+}
+
+.modal-content .modal-field input:focus,
+.modal-content .modal-field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.modal-content .modal-field textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.modal-content .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+}
+
+.modal-content .modal-actions .btn-modal {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex: 1;
+    min-width: 80px;
+}
+
+.modal-content .modal-actions .btn-modal.save {
+    background: var(--accent);
+    color: white;
+}
+
+.modal-content .modal-actions .btn-modal.save:hover {
+    background: var(--accent-dark);
+    transform: scale(1.02);
+}
+
+.modal-content .modal-actions .btn-modal.delete {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.modal-content .modal-actions .btn-modal.delete:hover {
+    background: rgba(231, 76, 60, 0.25);
+    transform: scale(1.02);
+}
+
+.modal-content .modal-actions .btn-modal.scrape {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--glass-border);
+}
+
+.modal-content .modal-actions .btn-modal.scrape:hover {
+    background: var(--bg-card-hover);
+    transform: scale(1.02);
 }
 
 /* ===== SETTINGS VIEW ===== */
@@ -1382,12 +1570,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-@keyframes dblClickPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
 /* ===== ESTADO DE CARGA ===== */
 .app-container.loading .carousel-item,
 .app-container.loading .info-card {
@@ -1652,6 +1834,44 @@ body {
             </div>
         </div>
 
+        <!-- ===== MODAL ===== -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Editar Juego</h3>
+                    <button class="modal-close" id="modalClose">
+                        <iconify-icon icon="mdi:close" width="18" height="18"></iconify-icon>
+                    </button>
+                </div>
+                <div class="modal-field">
+                    <label>Nombre</label>
+                    <input type="text" id="modalGameName" />
+                </div>
+                <div class="modal-field">
+                    <label>Descripción</label>
+                    <textarea id="modalGameDesc" placeholder="Añade una descripción..."></textarea>
+                </div>
+                <div class="modal-field">
+                    <label>URL</label>
+                    <input type="text" id="modalGameUrl" />
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal scrape" id="modalScrape">
+                        <iconify-icon icon="mdi:web" width="16" height="16"></iconify-icon>
+                        Scrapear
+                    </button>
+                    <button class="btn-modal delete" id="modalDelete">
+                        <iconify-icon icon="mdi:delete" width="16" height="16"></iconify-icon>
+                        Eliminar
+                    </button>
+                    <button class="btn-modal save" id="modalSave">
+                        <iconify-icon icon="mdi:content-save" width="16" height="16"></iconify-icon>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="toast" id="toast"></div>
     </div>
 
@@ -1684,25 +1904,16 @@ const COLOR_THEMES = [
     { id: 'white', name: 'Blanco', color: '#dfe6e9' }
 ];
 
-// ===== JUEGOS DE EJEMPLO POR SISTEMA =====
-const GAMES_BY_SYSTEM = {
-    'nintendo64': [
-        { name: 'Super Mario 64', year: '1996', size: '8 MB', cover: null },
-        { name: 'The Legend of Zelda: Ocarina of Time', year: '1998', size: '32 MB', cover: null },
-        { name: 'GoldenEye 007', year: '1997', size: '12 MB', cover: null },
-        { name: 'Mario Kart 64', year: '1996', size: '12 MB', cover: null },
-        { name: 'Super Smash Bros.', year: '1999', size: '16 MB', cover: null }
-    ],
-    'playstation': [
-        { name: 'Final Fantasy VII', year: '1997', size: '1.3 GB', cover: null },
-        { name: 'Metal Gear Solid', year: '1998', size: '700 MB', cover: null },
-        { name: 'Castlevania: Symphony of the Night', year: '1997', size: '500 MB', cover: null }
-    ],
-    'snes': [
-        { name: 'Chrono Trigger', year: '1995', size: '4 MB', cover: null },
-        { name: 'Super Metroid', year: '1994', size: '3 MB', cover: null },
-        { name: 'The Legend of Zelda: A Link to the Past', year: '1991', size: '1.5 MB', cover: null }
-    ]
+// ===== SISTEMA A LISTA (mapeo para juegos reales) =====
+const SYSTEM_LIST_MAP = {
+    'nintendo64': 'n64',
+    'playstation': 'psx',
+    'snes': 'snes',
+    'sega': 'sega',
+    'gameboy': 'gb',
+    'cps1': 'cps1',
+    'cps2': 'cps2',
+    'arcade': 'arcade'
 };
 
 // ===== ESTADO =====
@@ -1719,6 +1930,9 @@ let emuladoresData = [];
 let listasData = [];
 let selectedFolder = null;
 let currentSystemGames = [];
+let currentListaName = '';
+let selectedGameIndex = -1;
+let isGameViewOpen = false;
 
 // ===== DOM REFS =====
 const viewHome = document.getElementById('viewHome');
@@ -1752,6 +1966,17 @@ const folderPathText = document.getElementById('folderPathText');
 const gamesTitle = document.getElementById('gamesTitle');
 const gamesCount = document.getElementById('gamesCount');
 const gamesGrid = document.getElementById('gamesGrid');
+
+// ===== MODAL REFS =====
+const modalOverlay = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+const modalGameName = document.getElementById('modalGameName');
+const modalGameDesc = document.getElementById('modalGameDesc');
+const modalGameUrl = document.getElementById('modalGameUrl');
+const modalSave = document.getElementById('modalSave');
+const modalDelete = document.getElementById('modalDelete');
+const modalScrape = document.getElementById('modalScrape');
+const modalTitle = document.getElementById('modalTitle');
 
 // ===== STATUS WIDGET DOM REFS =====
 const clockDisplay = document.getElementById('clockDisplay');
@@ -1904,7 +2129,6 @@ folderInput.addEventListener('change', async function(e) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
-    // Obtener la carpeta seleccionada
     const firstFile = files[0];
     const path = firstFile.webkitRelativePath || firstFile.name;
     const folderName = path.split('/')[0];
@@ -1914,7 +2138,6 @@ folderInput.addEventListener('change', async function(e) {
     
     showToast(`Carpeta seleccionada: ${folderName}`, 'mdi:folder-open');
     
-    // Procesar archivos .txt
     const txtFiles = [];
     for (const file of files) {
         if (file.name.endsWith('.txt') && file.webkitRelativePath) {
@@ -1929,7 +2152,6 @@ folderInput.addEventListener('change', async function(e) {
         return;
     }
     
-    // Leer archivos .txt
     const results = [];
     for (const file of txtFiles) {
         try {
@@ -1959,7 +2181,6 @@ folderInput.addEventListener('change', async function(e) {
     listasData = results;
     renderListas();
     
-    // Guardar en localStorage
     localStorage.setItem('retroplay-folder', folderName);
     localStorage.setItem('retroplay-listas', JSON.stringify(results));
     
@@ -1981,17 +2202,9 @@ function scanListas() {
         } catch (e) {}
     }
     
-    // Si no hay guardado, usar datos de ejemplo
-    const exampleData = [
-        { name: 'cps1.txt', games: 18, gamesData: [], size: '2.4 KB' },
-        { name: 'cps2.txt', games: 25, gamesData: [], size: '3.1 KB' },
-        { name: 'n64.txt', games: 12, gamesData: [], size: '1.8 KB' },
-        { name: 'psx.txt', games: 30, gamesData: [], size: '4.2 KB' },
-        { name: 'snes.txt', games: 45, gamesData: [], size: '5.6 KB' }
-    ];
-    listasData = exampleData;
+    listasData = [];
     renderListas();
-    showToast('Datos de ejemplo cargados', 'mdi:information');
+    showToast('Selecciona una carpeta con listas', 'mdi:information');
 }
 
 function renderListas() {
@@ -2023,11 +2236,12 @@ function renderListas() {
                     year: 'N/A',
                     size: g.size || 'N/A',
                     cover: null,
-                    system: g.system || 'desconocido'
+                    system: g.system || 'desconocido',
+                    url: g.url || ''
                 }));
                 showGamesList(games, file.name.replace('.txt', ''));
             } else {
-                showToast(`Cargando juegos de ${file.name}...`, 'mdi:file-document');
+                showToast('Esta lista no tiene juegos', 'mdi:alert');
             }
         });
         listasGrid.appendChild(item);
@@ -2164,7 +2378,9 @@ function processEmulators(rawData) {
             imagePath: `${CONFIG.assetsPath}${item.system}.webp`,
             fondoPath: `${CONFIG.fondosPath}${item.system}.webp`,
             isRetroArch: isRetroArch,
-            visible: isRetroArch
+            visible: isRetroArch,
+            // Mapeo a nombre de lista
+            listaName: SYSTEM_LIST_MAP[item.system] || item.system
         };
     });
     
@@ -2375,9 +2591,11 @@ async function renderEmuladores() {
 function showGamesList(games, systemName) {
     gamesGrid.innerHTML = '';
     currentSystemGames = games;
+    currentListaName = systemName || 'Juegos';
     
-    gamesTitle.textContent = systemName || 'Juegos';
+    gamesTitle.textContent = currentListaName;
     gamesCount.textContent = `(${games.length})`;
+    isGameViewOpen = true;
     
     if (!games || games.length === 0) {
         gamesGrid.innerHTML = `
@@ -2393,23 +2611,10 @@ function showGamesList(games, systemName) {
         const card = document.createElement('div');
         card.className = 'game-card';
         card.style.animationDelay = `${index * 0.05}s`;
+        card.dataset.index = index;
         
         const coverWrapper = document.createElement('div');
         coverWrapper.className = 'game-cover-wrapper';
-        
-        if (game.cover) {
-            const img = document.createElement('img');
-            img.className = 'game-cover';
-            img.src = game.cover;
-            img.alt = game.name;
-            img.loading = 'lazy';
-            img.onerror = function() {
-                this.style.display = 'none';
-                const fallback = coverWrapper.querySelector('.game-fallback');
-                if (fallback) fallback.style.display = 'flex';
-            };
-            coverWrapper.appendChild(img);
-        }
         
         const fallback = document.createElement('div');
         fallback.className = 'game-fallback';
@@ -2417,9 +2622,6 @@ function showGamesList(games, systemName) {
             <iconify-icon icon="mdi:gamepad-variant" width="32" height="32"></iconify-icon>
             <span>${game.name.substring(0, 3).toUpperCase()}</span>
         `;
-        if (game.cover) {
-            fallback.style.display = 'none';
-        }
         coverWrapper.appendChild(fallback);
         
         const info = document.createElement('div');
@@ -2430,31 +2632,172 @@ function showGamesList(games, systemName) {
                 <span class="game-system">${game.system || 'Retro'}</span>
                 <span>•</span>
                 <span class="game-size">${game.size || 'N/A'}</span>
-                ${game.year && game.year !== 'N/A' ? `<span>• ${game.year}</span>` : ''}
+            </div>
+            <div class="game-actions">
+                <button class="btn-game download" data-index="${index}">
+                    <iconify-icon icon="mdi:download" width="14" height="14"></iconify-icon>
+                    Descargar
+                </button>
+                <button class="btn-game play disabled" data-index="${index}">
+                    <iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon>
+                    Jugar
+                </button>
             </div>
         `;
         
         card.appendChild(coverWrapper);
         card.appendChild(info);
         
-        card.addEventListener('click', () => {
-            showToast(`Lanzando ${game.name}...`, 'mdi:play');
+        // Click en la card para lanzar juego (si está descargado)
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-game') || e.target.closest('.game-actions')) return;
+            showToast(`Cargando ${game.name}...`, 'mdi:play');
             console.log('🎮 Lanzando juego:', game);
+        });
+        
+        // Click en botón descargar
+        const downloadBtn = card.querySelector('.btn-game.download');
+        downloadBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (game.url) {
+                window.open(game.url, '_blank');
+                showToast(`Descargando ${game.name}...`, 'mdi:download');
+                // Marcar como descargado (simulación)
+                downloadBtn.classList.remove('download');
+                downloadBtn.classList.add('play');
+                downloadBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Jugar`;
+                const playBtn = card.querySelector('.btn-game.play');
+                if (playBtn) {
+                    playBtn.classList.remove('disabled');
+                    playBtn.classList.add('play');
+                    playBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Jugar`;
+                }
+            } else {
+                showToast('No hay enlace de descarga disponible', 'mdi:alert');
+            }
+        });
+        
+        // Click en botón jugar (si está habilitado)
+        const playBtn = card.querySelector('.btn-game.play');
+        if (!playBtn.classList.contains('disabled')) {
+            playBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showToast(`Lanzando ${game.name}...`, 'mdi:play');
+                console.log('🎮 Jugando:', game);
+            });
+        }
+        
+        // Click largo para abrir modal
+        let longPressTimer = null;
+        card.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            longPressTimer = setTimeout(() => {
+                openGameModal(index);
+            }, 600);
+        });
+        card.addEventListener('mouseup', () => {
+            clearTimeout(longPressTimer);
+        });
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(longPressTimer);
+        });
+        // Touch
+        card.addEventListener('touchstart', (e) => {
+            longPressTimer = setTimeout(() => {
+                openGameModal(index);
+            }, 600);
+        });
+        card.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+        });
+        card.addEventListener('touchmove', () => {
+            clearTimeout(longPressTimer);
         });
         
         gamesGrid.appendChild(card);
     });
     
-    // Cambiar a la vista de juegos
     viewHome.classList.remove('active');
     viewSettings.classList.remove('active');
     viewGames.classList.add('active');
 }
 
+// ===== MODAL DE EDICIÓN =====
+function openGameModal(index) {
+    const game = currentSystemGames[index];
+    if (!game) return;
+    
+    selectedGameIndex = index;
+    modalTitle.textContent = `Editar: ${game.name}`;
+    modalGameName.value = game.name || '';
+    modalGameDesc.value = game.descripcion || '';
+    modalGameUrl.value = game.url || '';
+    modalOverlay.classList.add('open');
+}
+
+function closeGameModal() {
+    modalOverlay.classList.remove('open');
+    selectedGameIndex = -1;
+}
+
+// Guardar cambios del modal
+modalSave.addEventListener('click', () => {
+    if (selectedGameIndex < 0 || selectedGameIndex >= currentSystemGames.length) return;
+    
+    const game = currentSystemGames[selectedGameIndex];
+    game.name = modalGameName.value || game.name;
+    game.descripcion = modalGameDesc.value || '';
+    game.url = modalGameUrl.value || game.url;
+    
+    // Actualizar la card
+    const cards = gamesGrid.querySelectorAll('.game-card');
+    if (cards[selectedGameIndex]) {
+        const card = cards[selectedGameIndex];
+        const nameEl = card.querySelector('.game-name');
+        if (nameEl) nameEl.textContent = game.name;
+        const fallback = card.querySelector('.game-fallback span');
+        if (fallback) fallback.textContent = game.name.substring(0, 3).toUpperCase();
+    }
+    
+    showToast('Juego actualizado', 'mdi:check-circle');
+    closeGameModal();
+});
+
+// Eliminar juego
+modalDelete.addEventListener('click', () => {
+    if (selectedGameIndex < 0 || selectedGameIndex >= currentSystemGames.length) return;
+    if (!confirm('¿Eliminar este juego de la lista?')) return;
+    
+    currentSystemGames.splice(selectedGameIndex, 1);
+    closeGameModal();
+    // Re-renderizar
+    showGamesList(currentSystemGames, currentListaName);
+    showToast('Juego eliminado', 'mdi:delete');
+});
+
+// Scrapear (simulación)
+modalScrape.addEventListener('click', () => {
+    if (selectedGameIndex < 0 || selectedGameIndex >= currentSystemGames.length) return;
+    const game = currentSystemGames[selectedGameIndex];
+    showToast(`Buscando información de ${game.name}...`, 'mdi:web');
+    // Simulación de scrape
+    setTimeout(() => {
+        modalGameDesc.value = `Juego clásico de ${game.system || 'Retro'}. Enlace: ${game.url || 'No disponible'}`;
+        showToast('Información encontrada', 'mdi:check-circle');
+    }, 1500);
+});
+
+// Cerrar modal
+modalClose.addEventListener('click', closeGameModal);
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeGameModal();
+});
+
 // ===== VOLVER A HOME DESDE JUEGOS =====
 function goHomeFromGames() {
     viewGames.classList.remove('active');
     viewHome.classList.add('active');
+    isGameViewOpen = false;
 }
 
 // ===== ACORDEONES =====
@@ -2543,36 +2886,87 @@ function renderCarousel() {
         yearSpan.textContent = emu.year;
         item.appendChild(yearSpan);
         
-        // Doble clic para abrir juegos
+        // Segundo click (después del foco) para abrir juegos
+        let clickCount = 0;
         let clickTimer = null;
         item.addEventListener('click', () => {
-            if (clickTimer) {
-                clearTimeout(clickTimer);
-                clickTimer = null;
-                // Doble clic
-                const systemId = emu.id;
-                const games = GAMES_BY_SYSTEM[systemId] || GAMES_BY_SYSTEM['nintendo64'] || [];
-                showGamesList(games, emu.name);
-            } else {
+            clickCount++;
+            if (clickCount === 1) {
                 clickTimer = setTimeout(() => {
-                    clickTimer = null;
+                    clickCount = 0;
                     setActiveEmulator(index);
-                }, 300);
+                }, 400);
+            } else if (clickCount >= 2) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                // Segundo click - abrir juegos
+                const games = getGamesForSystem(emu.id, emu.listaName);
+                if (games && games.length > 0) {
+                    showGamesList(games, emu.name);
+                } else {
+                    showToast(`No hay juegos disponibles para ${emu.name}`, 'mdi:alert');
+                }
             }
         });
         
         item.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const systemId = emu.id;
-                const games = GAMES_BY_SYSTEM[systemId] || GAMES_BY_SYSTEM['nintendo64'] || [];
-                showGamesList(games, emu.name);
+                const games = getGamesForSystem(emu.id, emu.listaName);
+                if (games && games.length > 0) {
+                    showGamesList(games, emu.name);
+                } else {
+                    showToast(`No hay juegos disponibles para ${emu.name}`, 'mdi:alert');
+                }
             }
         });
         
         track.appendChild(item);
     });
     updateCarouselPosition();
+}
+
+// ===== OBTENER JUEGOS PARA UN SISTEMA =====
+function getGamesForSystem(systemId, listaName) {
+    // Buscar en las listas escaneadas
+    const systemKey = systemId.toLowerCase();
+    const listaKey = listaName || systemKey;
+    
+    // Buscar lista que coincida con el sistema
+    for (const lista of listasData) {
+        const listaBase = lista.name.replace('.txt', '').toLowerCase();
+        if (listaBase === listaKey || listaBase === systemKey || lista.name.toLowerCase().includes(systemKey)) {
+            if (lista.gamesData && lista.gamesData.length > 0) {
+                return lista.gamesData.map(g => ({
+                    name: g.name,
+                    year: 'N/A',
+                    size: g.size || 'N/A',
+                    cover: null,
+                    system: g.system || systemKey,
+                    url: g.url || ''
+                }));
+            }
+        }
+    }
+    
+    // Si no hay listas, usar datos de ejemplo
+    const exampleGames = {
+        'nintendo64': [
+            { name: 'Super Mario 64', year: '1996', size: '8 MB', system: 'nintendo64', url: '' },
+            { name: 'The Legend of Zelda: OoT', year: '1998', size: '32 MB', system: 'nintendo64', url: '' },
+            { name: 'GoldenEye 007', year: '1997', size: '12 MB', system: 'nintendo64', url: '' }
+        ],
+        'playstation': [
+            { name: 'Final Fantasy VII', year: '1997', size: '1.3 GB', system: 'playstation', url: '' },
+            { name: 'Metal Gear Solid', year: '1998', size: '700 MB', system: 'playstation', url: '' }
+        ],
+        'snes': [
+            { name: 'Chrono Trigger', year: '1995', size: '4 MB', system: 'snes', url: '' },
+            { name: 'Super Metroid', year: '1994', size: '3 MB', system: 'snes', url: '' }
+        ]
+    };
+    
+    return exampleGames[systemId] || exampleGames['nintendo64'] || [];
 }
 
 function renderIndicators() {
@@ -2708,6 +3102,7 @@ function showHome() {
     viewSettings.classList.remove('active');
     viewGames.classList.remove('active');
     settingsOpen = false;
+    isGameViewOpen = false;
 }
 
 function showSettings() {
@@ -2715,6 +3110,7 @@ function showSettings() {
     viewSettings.classList.add('active');
     viewGames.classList.remove('active');
     settingsOpen = true;
+    isGameViewOpen = false;
     renderSystemsList();
     renderColorThemes();
     renderEmuladores();
@@ -2835,6 +3231,11 @@ document.addEventListener('keydown', (e) => {
         return;
     }
     
+    if (modalOverlay.classList.contains('open')) {
+        if (e.key === 'Escape') closeGameModal();
+        return;
+    }
+    
     if (e.target.closest('input') || e.target.closest('textarea')) return;
     
     const activeElement = document.activeElement;
@@ -2860,7 +3261,7 @@ document.addEventListener('keydown', (e) => {
 let gamepadIndex = null;
 
 function handleGamepad() {
-    if (settingsOpen) return;
+    if (settingsOpen || isGameViewOpen) return;
     const gamepads = navigator.getGamepads();
     const gamepad = gamepads[gamepadIndex] || gamepads[0];
     if (!gamepad) return;
@@ -2956,7 +3357,7 @@ document.addEventListener('mouseup', (e) => {
 
 // ===== INIT =====
 async function init() {
-    console.log('🚀 RetroPlay - Con juegos y selector de carpetas');
+    console.log('🚀 RetroPlay - Con juegos reales y modal de edición');
     
     try {
         const rawData = await loadSystemConfig();
@@ -2970,7 +3371,6 @@ async function init() {
             emulators.forEach(emu => emu.visible = emu.isRetroArch);
         }
         
-        // Cargar listas guardadas
         scanListas();
         
         filterAndRender();
@@ -2981,7 +3381,9 @@ async function init() {
         
         console.log(`✅ ${emulators.length} sistemas (${filteredEmulators.length} visibles)`);
         console.log(`📦 ${emuladoresData.length} emuladores disponibles`);
-        console.log('🎮 Doble clic en un sistema para ver sus juegos');
+        console.log('📋 Listas cargadas:', listasData.length);
+        console.log('🎮 Segundo click en sistema → lista de juegos');
+        console.log('🖱️ Click largo en juego → modal de edición');
         
     } catch (error) {
         console.error('❌ Error:', error);
