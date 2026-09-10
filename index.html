@@ -1647,6 +1647,91 @@ body {
         border-right: 1px solid var(--glass-border);
     }
 }
+
+/* ===== GAME COVER CON IMÁGENES LOCALES ===== */
+.game-card .game-cover-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+
+.game-card .game-cover-wrapper .game-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: all var(--transition);
+}
+
+/* Marquee superpuesto en la esquina inferior derecha */
+.game-card .game-cover-wrapper .game-marquee {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    max-width: 60%;
+    max-height: 30%;
+    object-fit: contain;
+    z-index: 3;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+    pointer-events: none;
+    opacity: 0.95;
+    transition: all var(--transition);
+}
+
+.game-card:hover .game-cover-wrapper .game-marquee {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Degradado sutil en la parte inferior del cover para mejor legibilidad */
+.game-card .game-cover-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.game-card:hover .game-cover-wrapper::after {
+    opacity: 1;
+}
+
+/* Fallback cuando no hay imagen */
+.game-card .game-cover-wrapper .game-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    background: linear-gradient(145deg, #12121a, #1a1a2e);
+    gap: 6px;
+    z-index: 1;
+}
+
+.game-card .game-cover-wrapper .game-fallback iconify-icon {
+    opacity: 0.4;
+}
+
+.game-card .game-cover-wrapper .game-fallback span {
+    font-size: 10px;
+    opacity: 0.4;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 8px;
+    word-break: break-all;
+    letter-spacing: 0.5px;
+}
+
 </style>
 </head>
 <body>
@@ -1878,6 +1963,7 @@ const CONFIG = {
     emuladoresPath: 'assets/emuladores.json',
     assetsPath: 'assets/sistemas/',
     fondosPath: 'assets/fondos/',
+    mediaPath: 'media/',
     defaultIcon: 'mdi:gamepad-variant',
     listasPath: '/storage/emulated/0/retroplay/listas/'
 };
@@ -1900,6 +1986,21 @@ const COLOR_THEMES = [
     { id: 'white', name: 'Blanco', color: '#dfe6e9' }
 ];
 
+// ===== MAPEO SISTEMA → CARPETA DE MEDIA =====
+const SYSTEM_MEDIA_MAP = {
+    'nintendo64': 'n64',
+    'playstation': 'psx',
+    'snes': 'snes',
+    'sega': 'sega',
+    'gameboy': 'gb',
+    'nes': 'nes',
+    'gba': 'gba',
+    'psp': 'psp',
+    'dreamcast': 'dreamcast',
+    'neogeo': 'neogeo',
+    'arcade': 'arcade'
+};
+
 // ===== MAPEO SISTEMA → NOMBRE DE LISTA =====
 const SYSTEM_LIST_MAP = {
     'nintendo64': 'n64',
@@ -1907,10 +2008,30 @@ const SYSTEM_LIST_MAP = {
     'snes': 'snes',
     'sega': 'sega',
     'gameboy': 'gb',
-    'cps1': 'cps1',
-    'cps2': 'cps2',
+    'nes': 'nes',
+    'gba': 'gba',
+    'psp': 'psp',
+    'dreamcast': 'dreamcast',
+    'neogeo': 'neogeo',
     'arcade': 'arcade'
 };
+
+// ===== OBTENER RUTAS DE IMÁGENES =====
+function getMediaPaths(systemId, gameName) {
+    const systemFolder = SYSTEM_MEDIA_MAP[systemId] || systemId;
+    // Limpiar nombre: quitar extensión (.zip, .rom, etc.) y caracteres especiales
+    const cleanName = gameName
+        .replace(/\.[^.]+$/, '')      // Quitar extensión
+        .replace(/[^a-zA-Z0-9_-]/g, '_') // Reemplazar caracteres especiales
+        .toLowerCase();
+    
+    return {
+        cover: `${CONFIG.mediaPath}${systemFolder}/covers/${cleanName}.webp`,
+        marquee: `${CONFIG.mediaPath}${systemFolder}/marquees/${cleanName}.webp`,
+        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${cleanName}.webp`,
+        box3d: `${CONFIG.mediaPath}${systemFolder}/3dbox/${cleanName}.webp`
+    };
+}
 
 // ===== ESTADO =====
 let emulators = [];
@@ -2235,7 +2356,9 @@ function renderListas() {
                     system: g.system || 'desconocido',
                     url: g.url || ''
                 }));
-                showGamesList(games, file.name.replace('.txt', ''));
+                // Detectar sistema desde el nombre de la lista
+                const systemFromList = file.name.replace('.txt', '').toLowerCase();
+                showGamesList(games, file.name.replace('.txt', ''), systemFromList);
             } else {
                 showToast('Esta lista no tiene juegos', 'mdi:alert');
             }
@@ -2630,7 +2753,7 @@ function getGamesForSystem(systemId, listaName) {
 }
 
 // ===== MOSTRAR LISTA DE JUEGOS =====
-function showGamesList(games, systemName) {
+function showGamesList(games, systemName, systemId) {
     gamesGrid.innerHTML = '';
     currentSystemGames = games || [];
     currentListaName = systemName || 'Juegos';
@@ -2649,6 +2772,9 @@ function showGamesList(games, systemName) {
         `;
     }
     
+    // Determinar sistema para las imágenes
+    const sysId = systemId || (games && games[0] ? games[0].system : 'nintendo64');
+    
     games.forEach((game, index) => {
         const card = document.createElement('div');
         card.className = 'game-card';
@@ -2658,13 +2784,47 @@ function showGamesList(games, systemName) {
         const coverWrapper = document.createElement('div');
         coverWrapper.className = 'game-cover-wrapper';
         
+        // Obtener rutas de imágenes locales
+        const mediaPaths = getMediaPaths(sysId, game.name);
+        
+        // Crear cover
+        const coverImg = document.createElement('img');
+        coverImg.className = 'game-cover';
+        coverImg.src = mediaPaths.cover;
+        coverImg.alt = game.name;
+        coverImg.loading = 'lazy';
+        coverImg.style.display = 'block';
+        
+        // Crear fallback (se muestra si el cover falla)
         const fallback = document.createElement('div');
         fallback.className = 'game-fallback';
+        fallback.style.display = 'none';
         fallback.innerHTML = `
             <iconify-icon icon="mdi:gamepad-variant" width="32" height="32"></iconify-icon>
             <span>${game.name.substring(0, 3).toUpperCase()}</span>
         `;
+        
+        // Si el cover falla, mostrar fallback
+        coverImg.onerror = function() {
+            this.style.display = 'none';
+            fallback.style.display = 'flex';
+        };
+        
+        // Crear marquee (superpuesto)
+        const marqueeImg = document.createElement('img');
+        marqueeImg.className = 'game-marquee';
+        marqueeImg.src = mediaPaths.marquee;
+        marqueeImg.alt = '';
+        marqueeImg.loading = 'lazy';
+        
+        // Si el marquee falla, ocultarlo
+        marqueeImg.onerror = function() {
+            this.style.display = 'none';
+        };
+        
+        coverWrapper.appendChild(coverImg);
         coverWrapper.appendChild(fallback);
+        coverWrapper.appendChild(marqueeImg);
         
         const info = document.createElement('div');
         info.className = 'game-info';
@@ -2709,7 +2869,6 @@ function showGamesList(games, systemName) {
             if (game.url) {
                 window.open(game.url, '_blank');
                 showToast(`Descargando ${game.name}...`, 'mdi:download');
-                // Marcar como descargado (simulación)
                 downloadBtn.classList.remove('download');
                 downloadBtn.classList.add('play');
                 downloadBtn.innerHTML = `<iconify-icon icon="mdi:check" width="14" height="14"></iconify-icon> Descargado`;
@@ -2719,7 +2878,6 @@ function showGamesList(games, systemName) {
                     playBtn.classList.add('play');
                     playBtn.innerHTML = `<iconify-icon icon="mdi:play" width="14" height="14"></iconify-icon> Jugar`;
                 }
-                // Guardar estado de descarga
                 game.downloaded = true;
             } else {
                 showToast('No hay enlace de descarga disponible', 'mdi:alert');
@@ -2750,7 +2908,6 @@ function showGamesList(games, systemName) {
         card.addEventListener('mouseleave', () => {
             clearTimeout(longPressTimer);
         });
-        // Touch
         card.addEventListener('touchstart', (e) => {
             longPressTimer = setTimeout(() => {
                 openGameModal(index);
@@ -2939,7 +3096,7 @@ function renderCarousel() {
         item.addEventListener('click', () => {
             const games = getGamesForSystem(emu.id, emu.listaName);
             if (games && games.length > 0) {
-                showGamesList(games, emu.name);
+                showGamesList(games, emu.name, emu.id);
             } else {
                 showToast(`No hay juegos disponibles para ${emu.name}`, 'mdi:alert');
             }
