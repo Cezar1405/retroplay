@@ -2019,17 +2019,16 @@ const SYSTEM_LIST_MAP = {
 // ===== OBTENER RUTAS DE IMÁGENES =====
 function getMediaPaths(systemId, gameName) {
     const systemFolder = SYSTEM_MEDIA_MAP[systemId] || systemId;
-    // Limpiar nombre: quitar extensión (.zip, .rom, etc.) y caracteres especiales
-    const cleanName = gameName
-        .replace(/\.[^.]+$/, '')      // Quitar extensión
-        .replace(/[^a-zA-Z0-9_-]/g, '_') // Reemplazar caracteres especiales
-        .toLowerCase();
+    
+    // Solo quitar la extensión del ROM (.zip, .z64, .bin, etc.)
+    // El resto del nombre se mantiene TAL CUAL
+    const baseName = gameName.replace(/\.[^.]+$/, '');
     
     return {
-        cover: `${CONFIG.mediaPath}${systemFolder}/covers/${cleanName}.webp`,
-        marquee: `${CONFIG.mediaPath}${systemFolder}/marquees/${cleanName}.webp`,
-        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${cleanName}.webp`,
-        box3d: `${CONFIG.mediaPath}${systemFolder}/3dbox/${cleanName}.webp`
+        cover:      `${CONFIG.mediaPath}${systemFolder}/covers/${baseName}.webp`,
+        marquee:    `${CONFIG.mediaPath}${systemFolder}/marquees/${baseName}.webp`,
+        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${baseName}.webp`,
+        box3d:      `${CONFIG.mediaPath}${systemFolder}/3dbox/${baseName}.webp`
     };
 }
 
