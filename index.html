@@ -1823,6 +1823,214 @@ body {
     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
 }
 
+/* ===== HEADER DE JUEGOS CON LOGO Y CONTADOR ===== */
+.view-games .games-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 10;
+    gap: 12px;
+}
+
+.view-games .games-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.view-games .games-system-logo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 2px 8px rgba(108, 92, 231, 0.3));
+    transition: transform var(--transition);
+}
+
+.view-games .games-system-logo:hover {
+    transform: scale(1.08);
+}
+
+.view-games .games-system-logo.no-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.view-games .games-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.view-games .games-header h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.view-games .games-header h2 .game-count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent-light);
+    background: rgba(108, 92, 231, 0.15);
+    padding: 1px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(108, 92, 231, 0.2);
+    flex-shrink: 0;
+}
+
+.view-games .games-system-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.7;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.view-games .games-back {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.view-games .games-back:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}
+
+/* ===== MODAL: SECCIÓN MULTIMEDIA ===== */
+.modal-content .modal-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 16px 0 10px;
+    padding-top: 12px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-content .modal-section-title iconify-icon {
+    opacity: 0.7;
+}
+
+.modal-content .modal-media-field {
+    margin-bottom: 10px;
+}
+
+.modal-content .modal-media-field label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-content .modal-media-field label iconify-icon {
+    opacity: 0.7;
+}
+
+/* Indicador de estado: ✓ existe / ✗ no existe */
+.modal-content .modal-media-field .media-status {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    transition: all var(--transition);
+}
+
+.modal-content .modal-media-field .media-status.checking {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.modal-content .modal-media-field .media-status.exists {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.modal-content .modal-media-field .media-status.missing {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+/* Input de solo lectura para las URLs */
+.modal-content .modal-media-field input[readonly] {
+    width: 100%;
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-family: monospace;
+    word-break: break-all;
+    opacity: 0.7;
+    cursor: text;
+    transition: all var(--transition);
+}
+
+.modal-content .modal-media-field input[readonly]:focus {
+    outline: none;
+    border-color: var(--accent);
+    opacity: 1;
+    color: var(--text-secondary);
+}
+
+/* Modo oscuro/claro del modal más compacto */
+.modal-content {
+    max-height: 92vh;
+    padding: 20px;
+}
+
 </style>
 </head>
 <body>
@@ -1896,7 +2104,13 @@ body {
         <!-- ===== VIEW: GAMES ===== -->
         <div class="view view-games" id="viewGames">
             <div class="games-header">
-                <h2 id="gamesTitle">Juegos <span class="game-count" id="gamesCount"></span></h2>
+                <div class="games-header-left">
+                    <div class="games-system-logo" id="gamesSystemLogo"></div>
+                    <div class="games-header-info">
+                        <h2 id="gamesTitle">Juegos <span class="game-count" id="gamesCount"></span></h2>
+                        <span class="games-system-name" id="gamesSystemName">Sistema</span>
+                    </div>
+                </div>
                 <button class="games-back" id="gamesBack" aria-label="Volver">
                     <iconify-icon icon="mdi:arrow-left" width="20" height="20"></iconify-icon>
                 </button>
@@ -2024,9 +2238,52 @@ body {
                     <textarea id="modalGameDesc" placeholder="Añade una descripción..."></textarea>
                 </div>
                 <div class="modal-field">
-                    <label>URL</label>
+                    <label>URL del ROM</label>
                     <input type="text" id="modalGameUrl" />
                 </div>
+        
+                <!-- ===== SECCIÓN DE IMÁGENES ===== -->
+                <div class="modal-section-title">
+                    <iconify-icon icon="mdi:image-multiple" width="14" height="14"></iconify-icon>
+                    Recursos multimedia
+                </div>
+        
+                <div class="modal-media-field">
+                    <label>
+                        <iconify-icon icon="mdi:monitor-screenshot" width="14" height="14"></iconify-icon>
+                        Screenshot
+                        <span class="media-status" id="statusScreenshot"></span>
+                    </label>
+                    <input type="text" id="modalScreenshotUrl" readonly />
+                </div>
+        
+                <div class="modal-media-field">
+                    <label>
+                        <iconify-icon icon="mdi:tag-text" width="14" height="14"></iconify-icon>
+                        Marquee (logo)
+                        <span class="media-status" id="statusMarquee"></span>
+                    </label>
+                    <input type="text" id="modalMarqueeUrl" readonly />
+                </div>
+        
+                <div class="modal-media-field">
+                    <label>
+                        <iconify-icon icon="mdi:cube-outline" width="14" height="14"></iconify-icon>
+                        3D Box
+                        <span class="media-status" id="statusBox3d"></span>
+                    </label>
+                    <input type="text" id="modalBox3dUrl" readonly />
+                </div>
+        
+                <div class="modal-media-field">
+                    <label>
+                        <iconify-icon icon="mdi:image" width="14" height="14"></iconify-icon>
+                        Cover
+                        <span class="media-status" id="statusCover"></span>
+                    </label>
+                    <input type="text" id="modalCoverUrl" readonly />
+                </div>
+        
                 <div class="modal-actions">
                     <button class="btn-modal scrape" id="modalScrape">
                         <iconify-icon icon="mdi:web" width="16" height="16"></iconify-icon>
@@ -2186,6 +2443,20 @@ const modalSave = document.getElementById('modalSave');
 const modalDelete = document.getElementById('modalDelete');
 const modalScrape = document.getElementById('modalScrape');
 const modalTitle = document.getElementById('modalTitle');
+
+// Nuevas referencias para multimedia
+const modalScreenshotUrl = document.getElementById('modalScreenshotUrl');
+const modalMarqueeUrl = document.getElementById('modalMarqueeUrl');
+const modalBox3dUrl = document.getElementById('modalBox3dUrl');
+const modalCoverUrl = document.getElementById('modalCoverUrl');
+const statusScreenshot = document.getElementById('statusScreenshot');
+const statusMarquee = document.getElementById('statusMarquee');
+const statusBox3d = document.getElementById('statusBox3d');
+const statusCover = document.getElementById('statusCover');
+
+// Referencias del header de juegos
+const gamesSystemLogo = document.getElementById('gamesSystemLogo');
+const gamesSystemName = document.getElementById('gamesSystemName');
 
 // ===== STATUS WIDGET DOM REFS =====
 const clockDisplay = document.getElementById('clockDisplay');
@@ -2844,14 +3115,31 @@ function getGamesForSystem(systemId, listaName) {
     return [];
 }
 
-// ===== MOSTRAR LISTA DE JUEGOS =====
 function showGamesList(games, systemName, systemId) {
     gamesGrid.innerHTML = '';
     currentSystemGames = games || [];
     currentListaName = systemName || 'Juegos';
     
-    gamesTitle.textContent = currentListaName;
-    gamesCount.textContent = `(${games ? games.length : 0})`;
+    // ===== ACTUALIZAR HEADER CON LOGO Y CONTADOR =====
+    gamesTitle.innerHTML = `Juegos <span class="game-count" id="gamesCount">(${games ? games.length : 0})</span>`;
+    gamesSystemName.textContent = systemName || 'Sistema';
+    
+    // Mostrar logo del sistema
+    const sysId = systemId || (games && games[0] ? games[0].system : 'nintendo64');
+    const systemLogoPath = `${CONFIG.assetsPath}${sysId}.webp`;
+    
+    gamesSystemLogo.classList.remove('no-logo');
+    gamesSystemLogo.style.backgroundImage = `url(${systemLogoPath})`;
+    
+    // Fallback si no hay logo
+    const testLogo = new Image();
+    testLogo.onerror = function() {
+        gamesSystemLogo.style.backgroundImage = 'none';
+        gamesSystemLogo.classList.add('no-logo');
+        gamesSystemLogo.innerHTML = '<iconify-icon icon="mdi:gamepad-variant" width="24" height="24"></iconify-icon>';
+    };
+    testLogo.src = systemLogoPath;
+    
     isGameViewOpen = true;
     
     if (!games || games.length === 0) {
@@ -2863,9 +3151,6 @@ function showGamesList(games, systemName, systemId) {
             </div>
         `;
     }
-    
-    // Determinar sistema para las imágenes
-    const sysId = systemId || (games && games[0] ? games[0].system : 'nintendo64');
     
     games.forEach((game, index) => {
         const card = document.createElement('div');
@@ -3106,7 +3391,57 @@ function openGameModal(index) {
     modalGameName.value = game.name || '';
     modalGameDesc.value = game.descripcion || '';
     modalGameUrl.value = game.url || '';
+    
+    // ===== CARGAR URLs DE IMÁGENES =====
+    const sysId = currentSystemGames[0]?.system || 'nintendo64';
+    const mediaPaths = getMediaPaths(sysId, game.name);
+    
+    modalScreenshotUrl.value = mediaPaths.screenshot;
+    modalMarqueeUrl.value = mediaPaths.marquee;
+    modalBox3dUrl.value = mediaPaths.box3d;
+    modalCoverUrl.value = mediaPaths.cover;
+    
+    // ===== VERIFICAR SI EXISTEN LAS IMÁGENES =====
+    checkImageStatus(mediaPaths.screenshot, statusScreenshot);
+    checkImageStatus(mediaPaths.marquee, statusMarquee);
+    checkImageStatus(mediaPaths.box3d, statusBox3d);
+    checkImageStatus(mediaPaths.cover, statusCover);
+    
     modalOverlay.classList.add('open');
+}
+
+// ===== VERIFICAR SI UNA IMAGEN EXISTE =====
+function checkImageStatus(url, statusElement) {
+    // Estado inicial: verificando
+    statusElement.className = 'media-status checking';
+    statusElement.textContent = '…';
+    statusElement.title = 'Verificando...';
+    
+    // Crear imagen de prueba
+    const img = new Image();
+    
+    img.onload = function() {
+        statusElement.className = 'media-status exists';
+        statusElement.textContent = '✓';
+        statusElement.title = 'Imagen encontrada';
+    };
+    
+    img.onerror = function() {
+        statusElement.className = 'media-status missing';
+        statusElement.textContent = '✗';
+        statusElement.title = 'Imagen no encontrada';
+    };
+    
+    // Timeout por si tarda mucho
+    setTimeout(() => {
+        if (statusElement.classList.contains('checking')) {
+            statusElement.className = 'media-status missing';
+            statusElement.textContent = '✗';
+            statusElement.title = 'Tiempo de espera agotado';
+        }
+    }, 5000);
+    
+    img.src = url;
 }
 
 function closeGameModal() {
