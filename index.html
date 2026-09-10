@@ -1648,88 +1648,179 @@ body {
     }
 }
 
-/* ===== GAME COVER CON IMÁGENES LOCALES ===== */
-.game-card .game-cover-wrapper {
-    position: relative;
-    overflow: hidden;
+/* ===== GAME CARD CON MÚLTIPLES IMÁGENES ===== */
+
+/* Contenedor principal del juego */
+.game-card .game-visual {
+    width: 100%;
+    aspect-ratio: 1 / 1.35;
     background: var(--bg-secondary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
-.game-card .game-cover-wrapper .game-cover {
+/* ===== SCREENSHOT (parte superior, grande) ===== */
+.game-card .game-visual .screenshot-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, #12121a, #1a1a2e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-card .game-visual .screenshot-wrapper .screenshot-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    position: relative;
-    z-index: 1;
-    transition: all var(--transition);
+    transition: transform var(--transition);
 }
 
-/* Marquee superpuesto en la esquina inferior derecha */
-.game-card .game-cover-wrapper .game-marquee {
-    position: absolute;
-    bottom: 6px;
-    right: 6px;
-    max-width: 60%;
-    max-height: 30%;
-    object-fit: contain;
-    z-index: 3;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
-    pointer-events: none;
-    opacity: 0.95;
-    transition: all var(--transition);
+.game-card:hover .game-visual .screenshot-wrapper .screenshot-img {
+    transform: scale(1.03);
 }
 
-.game-card:hover .game-cover-wrapper .game-marquee {
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-/* Degradado sutil en la parte inferior del cover para mejor legibilidad */
-.game-card .game-cover-wrapper::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0;
-    transition: opacity var(--transition);
-}
-
-.game-card:hover .game-cover-wrapper::after {
-    opacity: 1;
-}
-
-/* Fallback cuando no hay imagen */
-.game-card .game-cover-wrapper .game-fallback {
+/* Fallback del screenshot: icono de mando */
+.game-card .game-visual .screenshot-wrapper .screenshot-fallback {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     color: var(--text-muted);
     background: linear-gradient(145deg, #12121a, #1a1a2e);
-    gap: 6px;
-    z-index: 1;
+    z-index: 0;
 }
 
-.game-card .game-cover-wrapper .game-fallback iconify-icon {
-    opacity: 0.4;
+.game-card .game-visual .screenshot-wrapper .screenshot-fallback iconify-icon {
+    opacity: 0.35;
+    color: var(--text-muted);
 }
 
-.game-card .game-cover-wrapper .game-fallback span {
+.game-card .game-visual .screenshot-wrapper .screenshot-fallback span {
     font-size: 10px;
     opacity: 0.4;
     font-weight: 600;
-    text-align: center;
-    padding: 0 8px;
-    word-break: break-all;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0 8px;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* ===== FILA INFERIOR: LOGO + 3DBOX ===== */
+.game-card .game-visual .bottom-row {
+    flex: 0 0 32%;
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, #0f0f16 0%, #0a0a0f 100%);
+    border-top: 1px solid var(--glass-border);
+    position: relative;
+}
+
+/* Separador vertical sutil entre logo y 3dbox */
+.game-card .game-visual .bottom-row::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 50%;
+    width: 1px;
+    background: var(--glass-border);
+    opacity: 0.5;
+}
+
+/* ===== LOGO (marquee) — izquierda ===== */
+.game-card .game-visual .bottom-row .logo-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card .game-visual .bottom-row .logo-wrapper .logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+    transition: transform var(--transition);
+}
+
+.game-card:hover .game-visual .bottom-row .logo-wrapper .logo-img {
+    transform: scale(1.05);
+}
+
+/* Fallback del logo: nombre corto */
+.game-card .game-visual .bottom-row .logo-wrapper .logo-fallback {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    opacity: 0.4;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 0 4px;
+    text-transform: uppercase;
+}
+
+/* ===== 3DBOX — derecha ===== */
+.game-card .game-visual .bottom-row .box3d-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card .game-visual .bottom-row .box3d-wrapper .box3d-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+    transition: transform var(--transition);
+}
+
+.game-card:hover .game-visual .bottom-row .box3d-wrapper .box3d-img {
+    transform: scale(1.05);
+}
+
+/* Fallback del 3dbox: cover */
+.game-card .game-visual .bottom-row .box3d-wrapper .box3d-fallback-cover {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0.9;
+    border-radius: 4px;
+}
+
+/* Si tampoco hay cover, texto */
+.game-card .game-visual .bottom-row .box3d-wrapper .box3d-fallback {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    opacity: 0.4;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 0 4px;
+    text-transform: uppercase;
+}
+
+/* Hover de la card completa */
+.game-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
 }
 
 </style>
@@ -2020,15 +2111,17 @@ const SYSTEM_LIST_MAP = {
 function getMediaPaths(systemId, gameName) {
     const systemFolder = SYSTEM_MEDIA_MAP[systemId] || systemId;
     
-    // Solo quitar la extensión del ROM (.zip, .z64, .bin, etc.)
-    // El resto del nombre se mantiene TAL CUAL
+    // Quitar SOLO la extensión del ROM (.zip, .z64, .bin, etc.)
     const baseName = gameName.replace(/\.[^.]+$/, '');
     
+    // Codificar la URL correctamente (espacios, comas, etc.)
+    const encodedName = encodeURIComponent(baseName);
+    
     return {
-        cover:      `${CONFIG.mediaPath}${systemFolder}/covers/${baseName}.webp`,
-        marquee:    `${CONFIG.mediaPath}${systemFolder}/marquees/${baseName}.webp`,
-        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${baseName}.webp`,
-        box3d:      `${CONFIG.mediaPath}${systemFolder}/3dbox/${baseName}.webp`
+        cover:      `${CONFIG.mediaPath}${systemFolder}/covers/${encodedName}.webp`,
+        marquee:    `${CONFIG.mediaPath}${systemFolder}/marquees/${encodedName}.webp`,
+        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${encodedName}.webp`,
+        box3d:      `${CONFIG.mediaPath}${systemFolder}/3dbox/${encodedName}.webp`
     };
 }
 
@@ -2780,51 +2873,137 @@ function showGamesList(games, systemName, systemId) {
         card.style.animationDelay = `${index * 0.05}s`;
         card.dataset.index = index;
         
-        const coverWrapper = document.createElement('div');
-        coverWrapper.className = 'game-cover-wrapper';
-        
-        // Obtener rutas de imágenes locales
+        // Obtener rutas de imágenes
         const mediaPaths = getMediaPaths(sysId, game.name);
+        const shortName = game.name.replace(/\.[^.]+$/, '').substring(0, 3).toUpperCase();
         
-        // Crear cover
-        const coverImg = document.createElement('img');
-        coverImg.className = 'game-cover';
-        coverImg.src = mediaPaths.cover;
-        coverImg.alt = game.name;
-        coverImg.loading = 'lazy';
-        coverImg.style.display = 'block';
+        // ===== CONTENEDOR VISUAL =====
+        const visual = document.createElement('div');
+        visual.className = 'game-visual';
         
-        // Crear fallback (se muestra si el cover falla)
-        const fallback = document.createElement('div');
-        fallback.className = 'game-fallback';
-        fallback.style.display = 'none';
-        fallback.innerHTML = `
-            <iconify-icon icon="mdi:gamepad-variant" width="32" height="32"></iconify-icon>
-            <span>${game.name.substring(0, 3).toUpperCase()}</span>
+        // ===== SCREENSHOT (parte superior) =====
+        const screenshotWrapper = document.createElement('div');
+        screenshotWrapper.className = 'screenshot-wrapper';
+        
+        // Fallback: icono de mando
+        const screenshotFallback = document.createElement('div');
+        screenshotFallback.className = 'screenshot-fallback';
+        screenshotFallback.innerHTML = `
+            <iconify-icon icon="mdi:gamepad-variant" width="42" height="42"></iconify-icon>
+            <span>${shortName}</span>
         `;
         
-        // Si el cover falla, mostrar fallback
-        coverImg.onerror = function() {
-            this.style.display = 'none';
-            fallback.style.display = 'flex';
+        // Imagen de screenshot
+        const screenshotImg = document.createElement('img');
+        screenshotImg.className = 'screenshot-img';
+        screenshotImg.src = mediaPaths.screenshot;
+        screenshotImg.alt = game.name;
+        screenshotImg.loading = 'lazy';
+        screenshotImg.style.display = 'none'; // Oculto hasta que cargue
+        
+        // Cuando cargue, mostrar imagen y ocultar fallback
+        screenshotImg.onload = function() {
+            this.style.display = 'block';
+            screenshotFallback.style.display = 'none';
         };
         
-        // Crear marquee (superpuesto)
-        const marqueeImg = document.createElement('img');
-        marqueeImg.className = 'game-marquee';
-        marqueeImg.src = mediaPaths.marquee;
-        marqueeImg.alt = '';
-        marqueeImg.loading = 'lazy';
-        
-        // Si el marquee falla, ocultarlo
-        marqueeImg.onerror = function() {
+        // Si falla, mantener el fallback visible
+        screenshotImg.onerror = function() {
             this.style.display = 'none';
+            screenshotFallback.style.display = 'flex';
         };
         
-        coverWrapper.appendChild(coverImg);
-        coverWrapper.appendChild(fallback);
-        coverWrapper.appendChild(marqueeImg);
+        screenshotWrapper.appendChild(screenshotFallback);
+        screenshotWrapper.appendChild(screenshotImg);
         
+        // ===== FILA INFERIOR: LOGO + 3DBOX =====
+        const bottomRow = document.createElement('div');
+        bottomRow.className = 'bottom-row';
+        
+        // --- LOGO (marquee) ---
+        const logoWrapper = document.createElement('div');
+        logoWrapper.className = 'logo-wrapper';
+        
+        const logoFallback = document.createElement('span');
+        logoFallback.className = 'logo-fallback';
+        logoFallback.textContent = shortName;
+        
+        const logoImg = document.createElement('img');
+        logoImg.className = 'logo-img';
+        logoImg.src = mediaPaths.marquee;
+        logoImg.alt = '';
+        logoImg.loading = 'lazy';
+        logoImg.style.display = 'none';
+        
+        logoImg.onload = function() {
+            this.style.display = 'block';
+            logoFallback.style.display = 'none';
+        };
+        logoImg.onerror = function() {
+            this.style.display = 'none';
+            logoFallback.style.display = 'block';
+        };
+        
+        logoWrapper.appendChild(logoFallback);
+        logoWrapper.appendChild(logoImg);
+        
+        // --- 3DBOX (con fallback a cover) ---
+        const box3dWrapper = document.createElement('div');
+        box3dWrapper.className = 'box3d-wrapper';
+        
+        const box3dFallback = document.createElement('span');
+        box3dFallback.className = 'box3d-fallback';
+        box3dFallback.textContent = '3D';
+        box3dFallback.style.display = 'none';
+        
+        // Primero intentamos 3dbox
+        const box3dImg = document.createElement('img');
+        box3dImg.className = 'box3d-img';
+        box3dImg.src = mediaPaths.box3d;
+        box3dImg.alt = '';
+        box3dImg.loading = 'lazy';
+        box3dImg.style.display = 'none';
+        
+        // Si 3dbox carga, mostrarlo
+        box3dImg.onload = function() {
+            this.style.display = 'block';
+            box3dFallback.style.display = 'none';
+        };
+        
+        // Si 3dbox falla, intentar con el cover
+        box3dImg.onerror = function() {
+            this.style.display = 'none';
+            
+            // Intentar con cover como fallback
+            const coverImg = document.createElement('img');
+            coverImg.className = 'box3d-fallback-cover';
+            coverImg.src = mediaPaths.cover;
+            coverImg.alt = '';
+            coverImg.loading = 'lazy';
+            
+            coverImg.onload = function() {
+                box3dWrapper.appendChild(coverImg);
+                box3dFallback.style.display = 'none';
+            };
+            
+            // Si tampoco hay cover, mostrar texto
+            coverImg.onerror = function() {
+                box3dFallback.style.display = 'block';
+            };
+        };
+        
+        box3dWrapper.appendChild(box3dImg);
+        box3dWrapper.appendChild(box3dFallback);
+        
+        // Ensamblar fila inferior
+        bottomRow.appendChild(logoWrapper);
+        bottomRow.appendChild(box3dWrapper);
+        
+        // Ensamblar visual
+        visual.appendChild(screenshotWrapper);
+        visual.appendChild(bottomRow);
+        
+        // ===== INFO (nombre, meta, acciones) =====
         const info = document.createElement('div');
         info.className = 'game-info';
         info.innerHTML = `
@@ -2846,10 +3025,12 @@ function showGamesList(games, systemName, systemId) {
             </div>
         `;
         
-        card.appendChild(coverWrapper);
+        card.appendChild(visual);
         card.appendChild(info);
         
-        // Click en la card para lanzar juego (si está descargado)
+        // ===== EVENTOS =====
+        
+        // Click en la card
         card.addEventListener('click', (e) => {
             if (e.target.closest('.btn-game') || e.target.closest('.game-actions')) return;
             const playBtn = card.querySelector('.btn-game.play');
@@ -2861,7 +3042,7 @@ function showGamesList(games, systemName, systemId) {
             }
         });
         
-        // Click en botón descargar
+        // Botón descargar
         const downloadBtn = card.querySelector('.btn-game.download');
         downloadBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -2883,7 +3064,7 @@ function showGamesList(games, systemName, systemId) {
             }
         });
         
-        // Click en botón jugar (si está habilitado)
+        // Botón jugar
         const playBtn = card.querySelector('.btn-game.play');
         if (!playBtn.classList.contains('disabled')) {
             playBtn.addEventListener('click', (e) => {
@@ -2893,31 +3074,19 @@ function showGamesList(games, systemName, systemId) {
             });
         }
         
-        // Click largo para abrir modal
+        // Click largo para modal
         let longPressTimer = null;
         card.addEventListener('mousedown', (e) => {
             if (e.button !== 0) return;
-            longPressTimer = setTimeout(() => {
-                openGameModal(index);
-            }, 600);
+            longPressTimer = setTimeout(() => openGameModal(index), 600);
         });
-        card.addEventListener('mouseup', () => {
-            clearTimeout(longPressTimer);
+        card.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+        card.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
+        card.addEventListener('touchstart', () => {
+            longPressTimer = setTimeout(() => openGameModal(index), 600);
         });
-        card.addEventListener('mouseleave', () => {
-            clearTimeout(longPressTimer);
-        });
-        card.addEventListener('touchstart', (e) => {
-            longPressTimer = setTimeout(() => {
-                openGameModal(index);
-            }, 600);
-        });
-        card.addEventListener('touchend', () => {
-            clearTimeout(longPressTimer);
-        });
-        card.addEventListener('touchmove', () => {
-            clearTimeout(longPressTimer);
-        });
+        card.addEventListener('touchend', () => clearTimeout(longPressTimer));
+        card.addEventListener('touchmove', () => clearTimeout(longPressTimer));
         
         gamesGrid.appendChild(card);
     });
