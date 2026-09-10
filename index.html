@@ -2371,14 +2371,12 @@ function getMediaPaths(systemId, gameName) {
     // Quitar SOLO la extensión del ROM (.zip, .z64, .bin, etc.)
     const baseName = gameName.replace(/\.[^.]+$/, '');
     
-    // Codificar la URL correctamente (espacios, comas, etc.)
-    const encodedName = encodeURIComponent(baseName);
-    
+    // NO codificar aquí. El navegador lo hace automáticamente al asignar img.src
     return {
-        cover:      `${CONFIG.mediaPath}${systemFolder}/covers/${encodedName}.webp`,
-        marquee:    `${CONFIG.mediaPath}${systemFolder}/marquees/${encodedName}.webp`,
-        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${encodedName}.webp`,
-        box3d:      `${CONFIG.mediaPath}${systemFolder}/3dbox/${encodedName}.webp`
+        cover:      `${CONFIG.mediaPath}${systemFolder}/covers/${baseName}.webp`,
+        marquee:    `${CONFIG.mediaPath}${systemFolder}/marquees/${baseName}.webp`,
+        screenshot: `${CONFIG.mediaPath}${systemFolder}/screenshots/${baseName}.webp`,
+        box3d:      `${CONFIG.mediaPath}${systemFolder}/3dbox/${baseName}.webp`
     };
 }
 
